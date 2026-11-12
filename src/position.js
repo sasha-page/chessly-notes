@@ -13,6 +13,8 @@
  *  - Its child <img alt="..."> is the FEN letter (capital = White).
  *  - Its id is "<row><col>" on the board itself (row 0 = rank 8,
  *    col 0 = a-file). This does NOT change when the board is flipped.
+ *  - Captured pieces stay in the page on the square they were captured on,
+ *    with an extra "ChessBoard_removed" class (see capture.html). We skip them.
  *
  * We read squares from the transform and check them against the id. If they
  * disagree, the board is probably mid-update, so the caller should try again.
@@ -23,7 +25,8 @@
 const ChessNotesPosition = (() => {
   const SELECTORS = {
     board: '[class*="ChessBoard_relative"]',
-    piece: '[class*="ChessBoard_pieceWrapper"]',
+    // Pieces still on the board: skip captured ones the site keeps hidden.
+    piece: '[class*="ChessBoard_pieceWrapper"]:not([class*="ChessBoard_removed"])',
     rankLabel: '[class*="ChessBoard_rankNumber"]',
   };
 
