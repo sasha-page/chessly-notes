@@ -1,0 +1,15 @@
+# Board HTML samples saved from the site for reference (root folder only,
+# so extension pages added later, e.g. under src/, are still tracked)
+/*.html
+
+# WebStorm / JetBrains project settings
+.idea/
+
+# Tools we may add later
+node_modules/
+web-ext-artifacts/
+
+# OS clutter
+Thumbs.db
+desktop.ini
+.DS_Store
