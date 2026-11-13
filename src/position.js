@@ -55,20 +55,23 @@ const ChessNotesPosition = (() => {
   }
 
   /**
-   * Fallback if the labels are hidden: count how many pieces' ids match their
-   * on-screen square as seen from White's side, and how many match it as seen
-   * from Black's side (rotated 180°).
+   * Fallback if the labels are hidden: work out the orientation from the ids.
+   * Every piece must agree. If any piece's id doesn't match its on-screen
+   * square from either side, or two pieces disagree, return null.
    */
   function orientationFromIds(pieces) {
-    let fromWhite = 0;
-    let fromBlack = 0;
+    let orientation = null;
     for (const p of pieces) {
       if (!p.idSquare || !p.screen) continue;
-      if (p.idSquare.row === p.screen.row && p.idSquare.col === p.screen.col) fromWhite++;
-      if (p.idSquare.row === 7 - p.screen.row && p.idSquare.col === 7 - p.screen.col) fromBlack++;
+      const fromWhite = p.idSquare.row === p.screen.row && p.idSquare.col === p.screen.col;
+      // Seen from Black's side the board is rotated 180°.
+      const fromBlack = p.idSquare.row === 7 - p.screen.row && p.idSquare.col === 7 - p.screen.col;
+      const thisPiece = fromWhite ? "white" : fromBlack ? "black" : null;
+      if (thisPiece === null) return null;
+      if (orientation !== null && orientation !== thisPiece) return null;
+      orientation = thisPiece;
     }
-    if (fromWhite === fromBlack) return null;
-    return fromBlack > fromWhite ? "black" : "white";
+    return orientation;
   }
 
   /** Screen square from `translate(X%, Y%)`, or null if between squares. */
