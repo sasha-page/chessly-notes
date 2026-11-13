@@ -49,7 +49,8 @@
     retries = 0;
     if (result.placement !== lastPlacement) {
       lastPlacement = result.placement;
-      console.log(LOG_PREFIX, "position:", result.placement, result.flipped ? "(flipped)" : "");
+      const bottom = result.orientation === "black" ? "Black" : "White";
+      console.log(LOG_PREFIX, "position:", result.placement, `(${bottom} at bottom)`);
     }
   }
 

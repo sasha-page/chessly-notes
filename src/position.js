@@ -4,15 +4,17 @@
  * Reads the chess position from the site's board HTML.
  *
  * The page has no FEN, so we rebuild the piece-placement part of one from the
- * piece elements (see starting_position.html, e4e5.html and flipped_e4.html):
+ * piece elements (see the sample boards starting_position.html, e4e5.html,
+ * e4_from_black.html and capture.html in the project folder):
  *
  *  - Each piece is a div whose class contains "ChessBoard_pieceWrapper".
  *  - Its style is `transform: translate(X%, Y%)`, where 100% is one square,
  *    measured from the top-left corner of the board *as shown on screen*.
- *    When the board is flipped these are mirrored.
+ *    When Black is at the bottom the board is rotated 180°, so the on-screen
+ *    column and row become 7 - col and 7 - row on the board.
  *  - Its child <img alt="..."> is the FEN letter (capital = White).
  *  - Its id is "<row><col>" on the board itself (row 0 = rank 8,
- *    col 0 = a-file). This does NOT change when the board is flipped.
+ *    col 0 = a-file). This does NOT change with the board's orientation.
  *  - Captured pieces stay in the page on the square they were captured on,
  *    with an extra "ChessBoard_removed" class (see capture.html). We skip them.
  *
@@ -39,32 +41,34 @@ const ChessNotesPosition = (() => {
   }
 
   /**
-   * Whether Black is at the bottom, from the rank labels down the side:
-   * "8" at the top means normal, "1" at the top means flipped.
+   * The board's orientation, i.e. which side is at the bottom ("white" or
+   * "black"), from the rank labels down the side: "8" at the top means
+   * White is at the bottom, "1" at the top means Black is.
    * Returns null if there are no labels to go by.
    */
-  function flippedFromLabels(board) {
+  function orientationFromLabels(board) {
     const topLabel = board.querySelector(SELECTORS.rankLabel);
     const text = topLabel?.textContent.trim();
-    if (text === "8") return false;
-    if (text === "1") return true;
+    if (text === "8") return "white";
+    if (text === "1") return "black";
     return null;
   }
 
   /**
    * Fallback if the labels are hidden: count how many pieces' ids match their
-   * on-screen square directly, and how many match it mirrored.
+   * on-screen square as seen from White's side, and how many match it as seen
+   * from Black's side (rotated 180°).
    */
-  function flippedFromIds(pieces) {
-    let normal = 0;
-    let mirrored = 0;
+  function orientationFromIds(pieces) {
+    let fromWhite = 0;
+    let fromBlack = 0;
     for (const p of pieces) {
       if (!p.idSquare || !p.screen) continue;
-      if (p.idSquare.row === p.screen.row && p.idSquare.col === p.screen.col) normal++;
-      if (p.idSquare.row === 7 - p.screen.row && p.idSquare.col === 7 - p.screen.col) mirrored++;
+      if (p.idSquare.row === p.screen.row && p.idSquare.col === p.screen.col) fromWhite++;
+      if (p.idSquare.row === 7 - p.screen.row && p.idSquare.col === 7 - p.screen.col) fromBlack++;
     }
-    if (normal === mirrored) return null;
-    return mirrored > normal;
+    if (fromWhite === fromBlack) return null;
+    return fromBlack > fromWhite ? "black" : "white";
   }
 
   /** Screen square from `translate(X%, Y%)`, or null if between squares. */
@@ -111,7 +115,8 @@ const ChessNotesPosition = (() => {
   /**
    * Reads one board.
    *
-   * Returns { ok: true, placement, flipped } on success, or
+   * Returns { ok: true, placement, orientation } on success, where
+   * orientation is the side at the bottom ("white" or "black"), or
    * { ok: false, reason } if the board can't be read right now (for example
    * while a piece is moving).
    */
@@ -125,8 +130,8 @@ const ChessNotesPosition = (() => {
 
     if (pieces.length === 0) return { ok: false, reason: "no pieces found" };
 
-    const flipped = flippedFromLabels(board) ?? flippedFromIds(pieces);
-    if (flipped === null) return { ok: false, reason: "can't tell which way up the board is" };
+    const orientation = orientationFromLabels(board) ?? orientationFromIds(pieces);
+    if (orientation === null) return { ok: false, reason: "can't tell which way up the board is" };
 
     const grid = Array.from({ length: 8 }, () => Array(8).fill(null));
 
@@ -138,7 +143,8 @@ const ChessNotesPosition = (() => {
         return { ok: false, reason: `piece ${p.letter} is between squares (${p.el.style.transform})` };
       }
 
-      const square = flipped
+      // Seen from Black's side the board is rotated 180°.
+      const square = orientation === "black"
         ? { row: 7 - p.screen.row, col: 7 - p.screen.col }
         : p.screen;
 
@@ -155,7 +161,7 @@ const ChessNotesPosition = (() => {
       grid[square.row][square.col] = p.letter;
     }
 
-    return { ok: true, placement: toPlacement(grid), flipped };
+    return { ok: true, placement: toPlacement(grid), orientation };
   }
 
   return { findBoards, readBoard };
