@@ -629,6 +629,20 @@ test("toPlacement: 9 rows → RangeError", () => {
   assertThrows(() => internals.toPlacement(long), RangeError, "grid must have 8 rows, got 9");
 });
 
+test("toPlacement: row 3 of 9 squares → RangeError", () => {
+  const wide = grid([
+    "r.bqkb.r",
+    "pp..pppp",
+    "..n..n..",
+    "..pp.....",
+    "...P....",
+    "..N..N..",
+    "PPP.PPPP",
+    "R.BQKB.R",
+  ]);
+  assertThrows(() => internals.toPlacement(wide), RangeError, "row 3 must have 8 squares, got 9");
+});
+
 showResults();
 </script>
 </body>
