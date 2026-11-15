@@ -393,6 +393,16 @@ test("orientationFromIds: no usable pieces → null", () => {
   assertEqual(internals.orientationFromIds(pieces), null);
 });
 
+// ----------------------------------------------------- parseScreenSquare (unit)
+
+// Reads a square from the transform.
+
+test("parseScreenSquare: translate(400%, 300%) → row 3, col 4", () => {
+  const el = document.createElement("div");
+  el.style.transform = "translate(400%, 300%)";
+  assertEqual(internals.parseScreenSquare(el), { row: 3, col: 4 });
+});
+
 showResults();
 </script>
 </body>
