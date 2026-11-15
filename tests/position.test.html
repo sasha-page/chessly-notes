@@ -643,6 +643,24 @@ test("toPlacement: row 3 of 9 squares → RangeError", () => {
   assertThrows(() => internals.toPlacement(wide), RangeError, "row 3 must have 8 squares, got 9");
 });
 
+test('toPlacement: unknown letter "X" → RangeError', () => {
+  const unknown = grid([
+    "rnbqkbnr",
+    "pppppppp",
+    ".....X..",
+    "........",
+    "........",
+    "........",
+    "PPPPPPPP",
+    "RNBQKBNR",
+  ]);
+  assertThrows(
+    () => internals.toPlacement(unknown),
+    RangeError,
+    'row 2, col 5 must be a FEN piece letter or null, got "X"',
+  );
+});
+
 showResults();
 </script>
 </body>
