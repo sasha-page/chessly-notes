@@ -109,6 +109,9 @@ const ChessNotesPosition = (() => {
 
   /** Turns an 8x8 grid (row 0 = rank 8) into FEN piece placement. */
   function toPlacement(grid) {
+    if (grid.length !== 8) {
+      throw new RangeError(`grid must have 8 rows, got ${grid.length}`);
+    }
     return grid
       .map((rank) => {
         let text = "";
