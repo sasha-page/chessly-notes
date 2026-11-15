@@ -312,6 +312,13 @@ test('orientationFromLabels: whitespace around the label is ignored ("\\n    8\\
   assertEqual(ChessNotesPosition.internals.orientationFromLabels(board), "white");
 });
 
+// Returns null when the labels don't say.
+
+test("orientationFromLabels: no labels (an empty container) → null", () => {
+  const board = document.createElement("div");
+  assertEqual(ChessNotesPosition.internals.orientationFromLabels(board), null);
+});
+
 showResults();
 </script>
 </body>
