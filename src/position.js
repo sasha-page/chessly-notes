@@ -93,7 +93,7 @@ const ChessNotesPosition = (() => {
   /** "e4"-style name, used in error messages. */
   function squareName(square) {
     if (square === null || typeof square !== "object") {
-      throw new TypeError(`squareName needs a square, got ${square}`);
+      throw new TypeError(`squareName needs a square like { row, col }, got ${square}`);
     }
     const { row, col } = square;
     for (const [name, value] of [["row", row], ["col", col]]) {
