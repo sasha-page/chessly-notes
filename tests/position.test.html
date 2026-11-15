@@ -343,6 +343,14 @@ test('orientationFromIds: every piece fits White at bottom → "white"', () => {
   assertEqual(internals.orientationFromIds(pieces), "white");
 });
 
+test('orientationFromIds: every piece fits Black at bottom → "black"', () => {
+  const pieces = [
+    { idSquare: { row: 4, col: 4 }, screen: { row: 3, col: 3 } }, // e4
+    { idSquare: { row: 7, col: 6 }, screen: { row: 0, col: 1 } }, // g1
+  ];
+  assertEqual(internals.orientationFromIds(pieces), "black");
+});
+
 showResults();
 </script>
 </body>
