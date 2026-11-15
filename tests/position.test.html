@@ -319,6 +319,14 @@ test("orientationFromLabels: no labels (an empty container) → null", () => {
   assertEqual(ChessNotesPosition.internals.orientationFromLabels(board), null);
 });
 
+test('orientationFromLabels: top label is not "8" or "1" ("4", "8" → null)', () => {
+  const board = document.createElement("div");
+  board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">4</div>
+    <div class="ChessBoard_rankNumber__YLkVg">8</div>`;
+  assertEqual(ChessNotesPosition.internals.orientationFromLabels(board), null);
+});
+
 showResults();
 </script>
 </body>
