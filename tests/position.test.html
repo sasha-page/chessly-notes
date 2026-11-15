@@ -459,6 +459,20 @@ for (const [label, id] of [
   });
 }
 
+// ------------------------------------------------------------ squareName (unit)
+
+// Names a square.
+
+for (const [name, square] of [
+  ["a8", { row: 0, col: 0 }],
+  ["h1", { row: 7, col: 7 }],
+  ["e4", { row: 4, col: 4 }],
+]) {
+  test(`squareName: row ${square.row}, col ${square.col} → "${name}"`, () => {
+    assertEqual(internals.squareName(square), name);
+  });
+}
+
 showResults();
 </script>
 </body>
