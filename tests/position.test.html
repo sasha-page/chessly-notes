@@ -599,6 +599,36 @@ test("toPlacement: grid after 1.e4 e5 → placement after 1.e4 e5", () => {
   assertEqual(internals.toPlacement(afterE4E5), AFTER_E4_E5);
 });
 
+// Throws unless the grid is 8 rows of 8 cells, each a piece letter or null.
+
+test("toPlacement: 7 rows → RangeError", () => {
+  const short = grid([
+    "r...k..r",
+    "pppppppp",
+    "........",
+    "........",
+    "........",
+    "PPPPPPPP",
+    "R...K..R",
+  ]);
+  assertThrows(() => internals.toPlacement(short), RangeError, "grid must have 8 rows, got 7");
+});
+
+test("toPlacement: 9 rows → RangeError", () => {
+  const long = grid([
+    "....k...",
+    "........",
+    "...q....",
+    "........",
+    "........",
+    "........",
+    "..N.....",
+    "........",
+    "......K.",
+  ]);
+  assertThrows(() => internals.toPlacement(long), RangeError, "grid must have 8 rows, got 9");
+});
+
 showResults();
 </script>
 </body>
