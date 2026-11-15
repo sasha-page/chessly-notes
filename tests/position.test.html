@@ -293,6 +293,14 @@ test('orientationFromLabels: labels "8", "7" → "white"', () => {
   assertEqual(ChessNotesPosition.internals.orientationFromLabels(board), "white");
 });
 
+test('orientationFromLabels: labels "1", "2" → "black"', () => {
+  const board = document.createElement("div");
+  board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">1</div>
+    <div class="ChessBoard_rankNumber__YLkVg">2</div>`;
+  assertEqual(ChessNotesPosition.internals.orientationFromLabels(board), "black");
+});
+
 showResults();
 </script>
 </body>
