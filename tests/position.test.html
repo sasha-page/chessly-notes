@@ -281,6 +281,18 @@ test("an unknown piece letter is rejected", () => {
   assertEqual(read(board), { ok: false, reason: `unknown piece "X" (id ${idOf("e4")})` });
 });
 
+// ------------------------------------------------- orientationFromLabels (unit)
+
+// Reads the top rank label.
+
+test('orientationFromLabels: labels "8", "7" → "white"', () => {
+  const board = document.createElement("div");
+  board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">8</div>
+    <div class="ChessBoard_rankNumber__YLkVg">7</div>`;
+  assertEqual(ChessNotesPosition.internals.orientationFromLabels(board), "white");
+});
+
 showResults();
 </script>
 </body>
