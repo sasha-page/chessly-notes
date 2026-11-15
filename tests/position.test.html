@@ -571,6 +571,20 @@ test("toPlacement: starting grid → starting placement", () => {
   assertEqual(internals.toPlacement(start), START);
 });
 
+test("toPlacement: grid after 1.e4 → placement after 1.e4", () => {
+  const afterE4 = grid([
+    "rnbqkbnr",
+    "pppppppp",
+    "........",
+    "........",
+    "....P...",
+    "........",
+    "PPPP.PPP",
+    "RNBQKBNR",
+  ]);
+  assertEqual(internals.toPlacement(afterE4), AFTER_E4);
+});
+
 showResults();
 </script>
 </body>
