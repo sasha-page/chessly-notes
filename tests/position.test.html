@@ -540,6 +540,23 @@ test('toPlacement: empty grid → "8/8/8/8/8/8/8/8"', () => {
   assertEqual(internals.toPlacement(empty), "8/8/8/8/8/8/8/8");
 });
 
+test("toPlacement: grid full of pawns, Black's on ranks 8–5 and White's on 4–1", () => {
+  const pawns = grid([
+    "pppppppp",
+    "pppppppp",
+    "pppppppp",
+    "pppppppp",
+    "PPPPPPPP",
+    "PPPPPPPP",
+    "PPPPPPPP",
+    "PPPPPPPP",
+  ]);
+  assertEqual(
+    internals.toPlacement(pawns),
+    "pppppppp/pppppppp/pppppppp/pppppppp/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP",
+  );
+});
+
 showResults();
 </script>
 </body>
