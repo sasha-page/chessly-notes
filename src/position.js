@@ -171,6 +171,6 @@ const ChessNotesPosition = (() => {
     findBoards,
     readBoard,
     // For tests only. Not part of the public API.
-    internals: { orientationFromLabels },
+    internals: { orientationFromLabels, orientationFromIds },
   };
 })();

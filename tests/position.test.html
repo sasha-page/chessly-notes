@@ -328,6 +328,71 @@ test('orientationFromLabels: top label is not "8" or "1" ("4", "8" → null)', (
   assertEqual(internals.orientationFromLabels(board), null);
 });
 
+// ---------------------------------------------------- orientationFromIds (unit)
+
+// Only idSquare and screen are read. Squares are { row, col } with row 0 = rank 8
+// and col 0 = the a-file; screen is counted from the top-left of the board as shown.
+
+// Returns the side when every piece agrees.
+
+test('orientationFromIds: every piece fits White at bottom → "white"', () => {
+  const pieces = [
+    { idSquare: { row: 6, col: 4 }, screen: { row: 6, col: 4 } }, // e2
+    { idSquare: { row: 0, col: 1 }, screen: { row: 0, col: 1 } }, // b8
+  ];
+  assertEqual(internals.orientationFromIds(pieces), "white");
+});
+
+test('orientationFromIds: every piece fits Black at bottom → "black"', () => {
+  const pieces = [
+    { idSquare: { row: 4, col: 4 }, screen: { row: 3, col: 3 } }, // e4
+    { idSquare: { row: 7, col: 6 }, screen: { row: 0, col: 1 } }, // g1
+  ];
+  assertEqual(internals.orientationFromIds(pieces), "black");
+});
+
+test('orientationFromIds: pieces with no id or no screen square are skipped → "black"', () => {
+  const pieces = [
+    { idSquare: null, screen: { row: 2, col: 2 } },
+    { idSquare: { row: 3, col: 6 }, screen: null },
+    { idSquare: { row: 7, col: 0 }, screen: { row: 0, col: 7 } }, // a1
+  ];
+  assertEqual(internals.orientationFromIds(pieces), "black");
+});
+
+// Returns null when it can't tell.
+
+test("orientationFromIds: two pieces disagree → null", () => {
+  const pieces = [
+    { idSquare: { row: 1, col: 3 }, screen: { row: 1, col: 3 } }, // d7, fits White
+    { idSquare: { row: 5, col: 2 }, screen: { row: 2, col: 5 } }, // c3, fits Black
+  ];
+  assertEqual(internals.orientationFromIds(pieces), null);
+});
+
+test("orientationFromIds: a piece fits neither side as the first piece → null", () => {
+  const pieces = [
+    { idSquare: { row: 7, col: 7 }, screen: { row: 6, col: 7 } }, // h1, fits neither
+    { idSquare: { row: 6, col: 0 }, screen: { row: 6, col: 0 } }, // a2, fits White
+  ];
+  assertEqual(internals.orientationFromIds(pieces), null);
+});
+
+test("orientationFromIds: a piece fits neither side as the second piece → null", () => {
+  const pieces = [
+    { idSquare: { row: 7, col: 1 }, screen: { row: 7, col: 1 } }, // b1, fits White
+    { idSquare: { row: 2, col: 5 }, screen: { row: 2, col: 4 } }, // f6, fits neither
+  ];
+  assertEqual(internals.orientationFromIds(pieces), null);
+});
+
+test("orientationFromIds: no usable pieces → null", () => {
+  const pieces = [
+    { idSquare: null, screen: { row: 5, col: 5 } },
+  ];
+  assertEqual(internals.orientationFromIds(pieces), null);
+});
+
 showResults();
 </script>
 </body>
