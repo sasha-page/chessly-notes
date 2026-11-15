@@ -351,6 +351,15 @@ test('orientationFromIds: every piece fits Black at bottom → "black"', () => {
   assertEqual(internals.orientationFromIds(pieces), "black");
 });
 
+test('orientationFromIds: pieces with no id or no screen square are skipped → "black"', () => {
+  const pieces = [
+    { idSquare: null, screen: { row: 2, col: 2 } },
+    { idSquare: { row: 3, col: 6 }, screen: null },
+    { idSquare: { row: 7, col: 0 }, screen: { row: 0, col: 7 } }, // a1
+  ];
+  assertEqual(internals.orientationFromIds(pieces), "black");
+});
+
 showResults();
 </script>
 </body>
