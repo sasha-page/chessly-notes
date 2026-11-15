@@ -498,6 +498,15 @@ for (const [label, square, message] of [
   });
 }
 
+for (const [label, square, message] of [
+  ["row", { row: 2.5, col: 3 }, "row must be a whole number from 0 to 7, got 2.5"],
+  ["col", { row: 1, col: 6.5 }, "col must be a whole number from 0 to 7, got 6.5"],
+]) {
+  test(`squareName: between squares: ${label} not whole → RangeError`, () => {
+    assertThrows(() => internals.squareName(square), RangeError, message);
+  });
+}
+
 showResults();
 </script>
 </body>
