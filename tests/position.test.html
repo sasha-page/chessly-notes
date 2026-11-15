@@ -393,6 +393,47 @@ test("orientationFromIds: no usable pieces → null", () => {
   assertEqual(internals.orientationFromIds(pieces), null);
 });
 
+// ----------------------------------------------------- parseScreenSquare (unit)
+
+// Reads a square from the transform.
+
+test("parseScreenSquare: translate(400%, 300%) → row 3, col 4", () => {
+  const el = document.createElement("div");
+  el.style.transform = "translate(400%, 300%)";
+  assertEqual(internals.parseScreenSquare(el), { row: 3, col: 4 });
+});
+
+test("parseScreenSquare: the far corner squares count: translate(700%, 0%) → row 0, col 7", () => {
+  const el = document.createElement("div");
+  el.style.transform = "translate(700%, 0%)";
+  assertEqual(internals.parseScreenSquare(el), { row: 0, col: 7 });
+});
+
+// Returns null when the piece isn't on a square.
+
+test("parseScreenSquare: between squares: translate(450%, 200%) → null", () => {
+  const el = document.createElement("div");
+  el.style.transform = "translate(450%, 200%)";
+  assertEqual(internals.parseScreenSquare(el), null);
+});
+
+test("parseScreenSquare: off the right edge: translate(800%, 100%) → null", () => {
+  const el = document.createElement("div");
+  el.style.transform = "translate(800%, 100%)";
+  assertEqual(internals.parseScreenSquare(el), null);
+});
+
+test("parseScreenSquare: off the top edge: translate(600%, -100%) → null", () => {
+  const el = document.createElement("div");
+  el.style.transform = "translate(600%, -100%)";
+  assertEqual(internals.parseScreenSquare(el), null);
+});
+
+test("parseScreenSquare: no transform: an element with no style → null", () => {
+  const el = document.createElement("div");
+  assertEqual(internals.parseScreenSquare(el), null);
+});
+
 showResults();
 </script>
 </body>
