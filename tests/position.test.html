@@ -403,6 +403,12 @@ test("parseScreenSquare: translate(400%, 300%) → row 3, col 4", () => {
   assertEqual(internals.parseScreenSquare(el), { row: 3, col: 4 });
 });
 
+test("parseScreenSquare: the far corner squares count: translate(700%, 0%) → row 0, col 7", () => {
+  const el = document.createElement("div");
+  el.style.transform = "translate(700%, 0%)";
+  assertEqual(internals.parseScreenSquare(el), { row: 0, col: 7 });
+});
+
 showResults();
 </script>
 </body>
