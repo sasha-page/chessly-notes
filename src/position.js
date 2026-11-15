@@ -167,5 +167,10 @@ const ChessNotesPosition = (() => {
     return { ok: true, placement: toPlacement(grid), orientation };
   }
 
-  return { findBoards, readBoard };
+  return {
+    findBoards,
+    readBoard,
+    // For tests only. Not part of the public API.
+    internals: { orientationFromLabels },
+  };
 })();
