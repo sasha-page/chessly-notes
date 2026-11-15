@@ -423,6 +423,12 @@ test("parseScreenSquare: off the right edge: translate(800%, 100%) → null", ()
   assertEqual(internals.parseScreenSquare(el), null);
 });
 
+test("parseScreenSquare: off the top edge: translate(600%, -100%) → null", () => {
+  const el = document.createElement("div");
+  el.style.transform = "translate(600%, -100%)";
+  assertEqual(internals.parseScreenSquare(el), null);
+});
+
 showResults();
 </script>
 </body>
