@@ -360,6 +360,16 @@ test('orientationFromIds: pieces with no id or no screen square are skipped → 
   assertEqual(internals.orientationFromIds(pieces), "black");
 });
 
+// Returns null when it can't tell.
+
+test("orientationFromIds: two pieces disagree → null", () => {
+  const pieces = [
+    { idSquare: { row: 1, col: 3 }, screen: { row: 1, col: 3 } }, // d7, fits White
+    { idSquare: { row: 5, col: 2 }, screen: { row: 2, col: 5 } }, // c3, fits Black
+  ];
+  assertEqual(internals.orientationFromIds(pieces), null);
+});
+
 showResults();
 </script>
 </body>
