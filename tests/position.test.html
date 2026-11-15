@@ -699,7 +699,7 @@ test("toPlacement: undefined at row 6, col 1 → TypeError", () => {
   assertThrows(
     () => internals.toPlacement(hole),
     TypeError,
-    "row 6, col 1 must be a piece letter or null, got undefined",
+    "row 6, col 1 must be a FEN piece letter or null, got undefined",
   );
 });
 
