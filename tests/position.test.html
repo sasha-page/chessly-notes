@@ -429,6 +429,11 @@ test("parseScreenSquare: off the top edge: translate(600%, -100%) → null", () 
   assertEqual(internals.parseScreenSquare(el), null);
 });
 
+test("parseScreenSquare: no transform: an element with no style → null", () => {
+  const el = document.createElement("div");
+  assertEqual(internals.parseScreenSquare(el), null);
+});
+
 showResults();
 </script>
 </body>
