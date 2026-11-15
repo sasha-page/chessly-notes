@@ -113,7 +113,10 @@ const ChessNotesPosition = (() => {
       throw new RangeError(`grid must have 8 rows, got ${grid.length}`);
     }
     return grid
-      .map((rank) => {
+      .map((rank, row) => {
+        if (rank.length !== 8) {
+          throw new RangeError(`row ${row} must have 8 squares, got ${rank.length}`);
+        }
         let text = "";
         let empty = 0;
         for (const letter of rank) {
