@@ -378,6 +378,14 @@ test("orientationFromIds: a piece fits neither side as the first piece → null"
   assertEqual(internals.orientationFromIds(pieces), null);
 });
 
+test("orientationFromIds: a piece fits neither side as the second piece → null", () => {
+  const pieces = [
+    { idSquare: { row: 7, col: 1 }, screen: { row: 7, col: 1 } }, // b1, fits White
+    { idSquare: { row: 2, col: 5 }, screen: { row: 2, col: 4 } }, // f6, fits neither
+  ];
+  assertEqual(internals.orientationFromIds(pieces), null);
+});
+
 showResults();
 </script>
 </body>
