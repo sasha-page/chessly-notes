@@ -386,6 +386,13 @@ test("orientationFromIds: a piece fits neither side as the second piece → null
   assertEqual(internals.orientationFromIds(pieces), null);
 });
 
+test("orientationFromIds: no usable pieces → null", () => {
+  const pieces = [
+    { idSquare: null, screen: { row: 5, col: 5 } },
+  ];
+  assertEqual(internals.orientationFromIds(pieces), null);
+});
+
 showResults();
 </script>
 </body>
