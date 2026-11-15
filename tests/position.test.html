@@ -328,6 +328,21 @@ test('orientationFromLabels: top label is not "8" or "1" ("4", "8" → null)', (
   assertEqual(internals.orientationFromLabels(board), null);
 });
 
+// ---------------------------------------------------- orientationFromIds (unit)
+
+// Only idSquare and screen are read. Squares are { row, col } with row 0 = rank 8
+// and col 0 = the a-file; screen is counted from the top-left of the board as shown.
+
+// Returns the side when every piece agrees.
+
+test('orientationFromIds: every piece fits White at bottom → "white"', () => {
+  const pieces = [
+    { idSquare: { row: 6, col: 4 }, screen: { row: 6, col: 4 } }, // e2
+    { idSquare: { row: 0, col: 1 }, screen: { row: 0, col: 1 } }, // b8
+  ];
+  assertEqual(internals.orientationFromIds(pieces), "white");
+});
+
 showResults();
 </script>
 </body>
