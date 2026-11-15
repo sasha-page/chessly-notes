@@ -61,6 +61,18 @@ function assertEqual(actual, expected) {
   }
 }
 
+/** Checks that fn throws exactly errorType (not a subclass) with this message. */
+function assertThrows(fn, errorType, message) {
+  const expected = `${errorType.name}: ${message}`;
+  try {
+    fn();
+  } catch (error) {
+    if (error.constructor === errorType && error.message === message) return;
+    throw new Error(`expected ${expected}\n     got ${error.name}: ${error.message}`);
+  }
+  throw new Error(`expected ${expected}\n     got no error`);
+}
+
 function showResults() {
   const list = document.getElementById("results");
   for (const r of results) {
@@ -470,6 +482,19 @@ for (const [name, square] of [
 ]) {
   test(`squareName: row ${square.row}, col ${square.col} → "${name}"`, () => {
     assertEqual(internals.squareName(square), name);
+  });
+}
+
+// Throws unless row and col are both whole numbers 0–7.
+
+for (const [label, square, message] of [
+  ["row past 7", { row: 8, col: 2 }, "row must be a whole number from 0 to 7, got 8"],
+  ["row below 0", { row: -1, col: 5 }, "row must be a whole number from 0 to 7, got -1"],
+  ["col past 7", { row: 3, col: 8 }, "col must be a whole number from 0 to 7, got 8"],
+  ["col below 0", { row: 6, col: -1 }, "col must be a whole number from 0 to 7, got -1"],
+]) {
+  test(`squareName: off the board: ${label} → RangeError`, () => {
+    assertThrows(() => internals.squareName(square), RangeError, message);
   });
 }
 
