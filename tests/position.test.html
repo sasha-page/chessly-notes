@@ -517,6 +517,29 @@ for (const [label, square, message] of [
   });
 }
 
+// ----------------------------------------------------------- toPlacement (unit)
+
+/** An 8x8 grid from one string per rank, rank 8 first, "." for an empty square. */
+function grid(ranks) {
+  return ranks.map((rank) => [...rank].map((c) => (c === "." ? null : c)));
+}
+
+// Turns a grid into FEN piece placement.
+
+test('toPlacement: empty grid → "8/8/8/8/8/8/8/8"', () => {
+  const empty = grid([
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+  ]);
+  assertEqual(internals.toPlacement(empty), "8/8/8/8/8/8/8/8");
+});
+
 showResults();
 </script>
 </body>
