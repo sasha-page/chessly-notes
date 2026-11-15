@@ -585,6 +585,20 @@ test("toPlacement: grid after 1.e4 → placement after 1.e4", () => {
   assertEqual(internals.toPlacement(afterE4), AFTER_E4);
 });
 
+test("toPlacement: grid after 1.e4 e5 → placement after 1.e4 e5", () => {
+  const afterE4E5 = grid([
+    "rnbqkbnr",
+    "pppp.ppp",
+    "........",
+    "....p...",
+    "....P...",
+    "........",
+    "PPPP.PPP",
+    "RNBQKBNR",
+  ]);
+  assertEqual(internals.toPlacement(afterE4E5), AFTER_E4_E5);
+});
+
 showResults();
 </script>
 </body>
