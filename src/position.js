@@ -91,7 +91,19 @@ const ChessNotesPosition = (() => {
   }
 
   /** "e4"-style name, used in error messages. */
-  function squareName({ row, col }) {
+  function squareName(square) {
+    if (square === null || typeof square !== "object") {
+      throw new TypeError(`squareName needs a square like { row, col }, got ${square}`);
+    }
+    const { row, col } = square;
+    for (const [name, value] of [["row", row], ["col", col]]) {
+      if (typeof value !== "number") {
+        throw new TypeError(`${name} must be a number, got ${JSON.stringify(value) ?? value}`);
+      }
+      if (!Number.isInteger(value) || value < 0 || value > 7) {
+        throw new RangeError(`${name} must be a whole number from 0 to 7, got ${value}`);
+      }
+    }
     return "abcdefgh"[col] + (8 - row);
   }
 
@@ -171,6 +183,6 @@ const ChessNotesPosition = (() => {
     findBoards,
     readBoard,
     // For tests only. Not part of the public API.
-    internals: { orientationFromLabels, orientationFromIds, parseScreenSquare, parseIdSquare },
+    internals: { orientationFromLabels, orientationFromIds, parseScreenSquare, parseIdSquare, squareName },
   };
 })();
