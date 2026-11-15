@@ -434,6 +434,16 @@ test("parseScreenSquare: no transform: an element with no style → null", () =>
   assertEqual(internals.parseScreenSquare(el), null);
 });
 
+// --------------------------------------------------------- parseIdSquare (unit)
+
+// Reads a square from the id.
+
+test('parseIdSquare: "44" → row 4, col 4', () => {
+  const el = document.createElement("div");
+  el.id = "44";
+  assertEqual(internals.parseIdSquare(el), { row: 4, col: 4 });
+});
+
 showResults();
 </script>
 </body>
