@@ -92,7 +92,7 @@ const ChessNotesPosition = (() => {
 
   /** Throws unless a row or column index is on the board. */
   function checkCoordinate(name, value) {
-    if (value < 0 || value > 7) {
+    if (!Number.isInteger(value) || value < 0 || value > 7) {
       throw new RangeError(`${name} must be a whole number from 0 to 7, got ${value}`);
     }
   }
