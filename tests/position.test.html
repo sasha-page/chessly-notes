@@ -370,6 +370,14 @@ test("orientationFromIds: two pieces disagree → null", () => {
   assertEqual(internals.orientationFromIds(pieces), null);
 });
 
+test("orientationFromIds: a piece fits neither side as the first piece → null", () => {
+  const pieces = [
+    { idSquare: { row: 7, col: 7 }, screen: { row: 6, col: 7 } }, // h1, fits neither
+    { idSquare: { row: 6, col: 0 }, screen: { row: 6, col: 0 } }, // a2, fits White
+  ];
+  assertEqual(internals.orientationFromIds(pieces), null);
+});
+
 showResults();
 </script>
 </body>
