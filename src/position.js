@@ -119,7 +119,12 @@ const ChessNotesPosition = (() => {
         }
         let text = "";
         let empty = 0;
-        for (const letter of rank) {
+        for (const [col, letter] of rank.entries()) {
+          if (letter !== null && !PIECE_LETTERS.has(letter)) {
+            throw new RangeError(
+              `row ${row}, col ${col} must be a FEN piece letter or null, got ${JSON.stringify(letter)}`,
+            );
+          }
           if (letter) {
             if (empty) text += empty;
             text += letter;
