@@ -109,11 +109,28 @@ const ChessNotesPosition = (() => {
 
   /** Turns an 8x8 grid (row 0 = rank 8) into FEN piece placement. */
   function toPlacement(grid) {
+    if (!Array.isArray(grid)) {
+      throw new TypeError(`grid must be an array of 8 rows, got ${JSON.stringify(grid) ?? grid}`);
+    }
+    if (grid.length !== 8) {
+      throw new RangeError(`grid must have 8 rows, got ${grid.length}`);
+    }
     return grid
-      .map((rank) => {
+      .map((rank, row) => {
+        if (!Array.isArray(rank)) {
+          throw new TypeError(`row ${row} must be an array, got ${JSON.stringify(rank) ?? rank}`);
+        }
+        if (rank.length !== 8) {
+          throw new RangeError(`row ${row} must have 8 squares, got ${rank.length}`);
+        }
         let text = "";
         let empty = 0;
-        for (const letter of rank) {
+        for (const [col, letter] of rank.entries()) {
+          if (letter !== null && !PIECE_LETTERS.has(letter)) {
+            throw new RangeError(
+              `row ${row}, col ${col} must be a FEN piece letter or null, got ${JSON.stringify(letter)}`,
+            );
+          }
           if (letter) {
             if (empty) text += empty;
             text += letter;
@@ -183,6 +200,6 @@ const ChessNotesPosition = (() => {
     findBoards,
     readBoard,
     // For tests only. Not part of the public API.
-    internals: { orientationFromLabels, orientationFromIds, parseScreenSquare, parseIdSquare, squareName },
+    internals: { orientationFromLabels, orientationFromIds, parseScreenSquare, parseIdSquare, squareName, toPlacement },
   };
 })();

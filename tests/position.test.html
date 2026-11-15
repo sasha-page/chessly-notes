@@ -517,6 +517,192 @@ for (const [label, square, message] of [
   });
 }
 
+// ----------------------------------------------------------- toPlacement (unit)
+
+/** An 8x8 grid from one string per rank, rank 8 first, "." for an empty square. */
+function grid(ranks) {
+  return ranks.map((rank) => [...rank].map((c) => (c === "." ? null : c)));
+}
+
+// Turns a grid into FEN piece placement.
+
+test('toPlacement: empty grid → "8/8/8/8/8/8/8/8"', () => {
+  const empty = grid([
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+  ]);
+  assertEqual(internals.toPlacement(empty), "8/8/8/8/8/8/8/8");
+});
+
+test("toPlacement: grid full of pawns, Black's on ranks 8–5 and White's on 4–1", () => {
+  const pawns = grid([
+    "pppppppp",
+    "pppppppp",
+    "pppppppp",
+    "pppppppp",
+    "PPPPPPPP",
+    "PPPPPPPP",
+    "PPPPPPPP",
+    "PPPPPPPP",
+  ]);
+  assertEqual(
+    internals.toPlacement(pawns),
+    "pppppppp/pppppppp/pppppppp/pppppppp/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP",
+  );
+});
+
+test("toPlacement: starting grid → starting placement", () => {
+  const start = grid([
+    "rnbqkbnr",
+    "pppppppp",
+    "........",
+    "........",
+    "........",
+    "........",
+    "PPPPPPPP",
+    "RNBQKBNR",
+  ]);
+  assertEqual(internals.toPlacement(start), START);
+});
+
+test("toPlacement: grid after 1.e4 → placement after 1.e4", () => {
+  const afterE4 = grid([
+    "rnbqkbnr",
+    "pppppppp",
+    "........",
+    "........",
+    "....P...",
+    "........",
+    "PPPP.PPP",
+    "RNBQKBNR",
+  ]);
+  assertEqual(internals.toPlacement(afterE4), AFTER_E4);
+});
+
+test("toPlacement: grid after 1.e4 e5 → placement after 1.e4 e5", () => {
+  const afterE4E5 = grid([
+    "rnbqkbnr",
+    "pppp.ppp",
+    "........",
+    "....p...",
+    "....P...",
+    "........",
+    "PPPP.PPP",
+    "RNBQKBNR",
+  ]);
+  assertEqual(internals.toPlacement(afterE4E5), AFTER_E4_E5);
+});
+
+// Throws unless the grid is 8 rows of 8 cells, each a piece letter or null.
+
+test("toPlacement: 7 rows → RangeError", () => {
+  const short = grid([
+    "r...k..r",
+    "pppppppp",
+    "........",
+    "........",
+    "........",
+    "PPPPPPPP",
+    "R...K..R",
+  ]);
+  assertThrows(() => internals.toPlacement(short), RangeError, "grid must have 8 rows, got 7");
+});
+
+test("toPlacement: 9 rows → RangeError", () => {
+  const long = grid([
+    "....k...",
+    "........",
+    "...q....",
+    "........",
+    "........",
+    "........",
+    "..N.....",
+    "........",
+    "......K.",
+  ]);
+  assertThrows(() => internals.toPlacement(long), RangeError, "grid must have 8 rows, got 9");
+});
+
+test("toPlacement: row 3 of 9 squares → RangeError", () => {
+  const wide = grid([
+    "r.bqkb.r",
+    "pp..pppp",
+    "..n..n..",
+    "..pp.....",
+    "...P....",
+    "..N..N..",
+    "PPP.PPPP",
+    "R.BQKB.R",
+  ]);
+  assertThrows(() => internals.toPlacement(wide), RangeError, "row 3 must have 8 squares, got 9");
+});
+
+test('toPlacement: unknown letter "X" → RangeError', () => {
+  const unknown = grid([
+    "rnbqkbnr",
+    "pppppppp",
+    ".....X..",
+    "........",
+    "........",
+    "........",
+    "PPPPPPPP",
+    "RNBQKBNR",
+  ]);
+  assertThrows(
+    () => internals.toPlacement(unknown),
+    RangeError,
+    'row 2, col 5 must be a FEN piece letter or null, got "X"',
+  );
+});
+
+test("toPlacement: undefined at row 6, col 1 → RangeError", () => {
+  const hole = grid([
+    "...k....",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "...K....",
+  ]);
+  hole[6][1] = undefined;
+  assertThrows(
+    () => internals.toPlacement(hole),
+    RangeError,
+    "row 6, col 1 must be a FEN piece letter or null, got undefined",
+  );
+});
+
+test("toPlacement: null in place of the grid → TypeError", () => {
+  assertThrows(
+    () => internals.toPlacement(null),
+    TypeError,
+    "grid must be an array of 8 rows, got null",
+  );
+});
+
+test('toPlacement: row 4 is the string "8" → TypeError', () => {
+  const stringRow = grid([
+    "r..qk..r",
+    "ppp..ppp",
+    "..n.bn..",
+    "...pp...",
+    "........",
+    "..NBPN..",
+    "PPP..PPP",
+    "R..QK..R",
+  ]);
+  stringRow[4] = "8";
+  assertThrows(() => internals.toPlacement(stringRow), TypeError, 'row 4 must be an array, got "8"');
+});
+
 showResults();
 </script>
 </body>
