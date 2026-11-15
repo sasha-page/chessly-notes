@@ -128,7 +128,7 @@ const ChessNotesPosition = (() => {
         for (const [col, letter] of rank.entries()) {
           if (letter !== null && typeof letter !== "string") {
             throw new TypeError(
-              `row ${row}, col ${col} must be a piece letter or null, got ${JSON.stringify(letter) ?? letter}`,
+              `row ${row}, col ${col} must be a FEN piece letter or null, got ${JSON.stringify(letter) ?? letter}`,
             );
           }
           if (letter !== null && !PIECE_LETTERS.has(letter)) {
