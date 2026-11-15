@@ -301,6 +301,17 @@ test('orientationFromLabels: labels "1", "2" → "black"', () => {
   assertEqual(ChessNotesPosition.internals.orientationFromLabels(board), "black");
 });
 
+test('orientationFromLabels: whitespace around the label is ignored ("\\n    8\\n  ", "7" → "white")', () => {
+  const board = document.createElement("div");
+  // Laid out like the real page, with the number on its own line.
+  board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">
+    8
+  </div>
+    <div class="ChessBoard_rankNumber__YLkVg">7</div>`;
+  assertEqual(ChessNotesPosition.internals.orientationFromLabels(board), "white");
+});
+
 showResults();
 </script>
 </body>
