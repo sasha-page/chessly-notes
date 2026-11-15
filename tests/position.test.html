@@ -510,7 +510,7 @@ for (const [label, square, message] of [
 for (const [label, square, message] of [
   ["a string row", { row: "4", col: 0 }, 'row must be a number, got "4"'],
   ["no col", { row: 7 }, "col must be a number, got undefined"],
-  ["null in place of the square", null, "squareName needs a square, got null"],
+  ["null in place of the square", null, "squareName needs a square like { row, col }, got null"],
 ]) {
   test(`squareName: not a number: ${label} → TypeError`, () => {
     assertThrows(() => internals.squareName(square), TypeError, message);
