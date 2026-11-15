@@ -444,6 +444,21 @@ test('parseIdSquare: "44" → row 4, col 4', () => {
   assertEqual(internals.parseIdSquare(el), { row: 4, col: 4 });
 });
 
+// Returns null for other ids.
+
+for (const [label, id] of [
+  ["empty", ""],
+  ["a letter", "8a"],
+  ["three digits", "123"],
+  ["a digit past 7", "09"],
+]) {
+  test(`parseIdSquare: ${label}: "${id}" → null`, () => {
+    const el = document.createElement("div");
+    el.id = id;
+    assertEqual(internals.parseIdSquare(el), null);
+  });
+}
+
 showResults();
 </script>
 </body>
