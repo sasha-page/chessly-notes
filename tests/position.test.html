@@ -557,6 +557,20 @@ test("toPlacement: grid full of pawns, Black's on ranks 8–5 and White's on 4�
   );
 });
 
+test("toPlacement: starting grid → starting placement", () => {
+  const start = grid([
+    "rnbqkbnr",
+    "pppppppp",
+    "........",
+    "........",
+    "........",
+    "........",
+    "PPPPPPPP",
+    "RNBQKBNR",
+  ]);
+  assertEqual(internals.toPlacement(start), START);
+});
+
 showResults();
 </script>
 </body>
