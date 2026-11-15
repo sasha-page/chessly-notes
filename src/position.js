@@ -92,13 +92,20 @@ const ChessNotesPosition = (() => {
 
   /** Throws unless a row or column index is on the board. */
   function checkCoordinate(name, value) {
+    if (typeof value !== "number") {
+      throw new TypeError(`${name} must be a number, got ${JSON.stringify(value) ?? value}`);
+    }
     if (!Number.isInteger(value) || value < 0 || value > 7) {
       throw new RangeError(`${name} must be a whole number from 0 to 7, got ${value}`);
     }
   }
 
   /** "e4"-style name, used in error messages. */
-  function squareName({ row, col }) {
+  function squareName(square) {
+    if (square === null || typeof square !== "object") {
+      throw new TypeError(`squareName needs a square, got ${square}`);
+    }
+    const { row, col } = square;
     checkCoordinate("row", row);
     checkCoordinate("col", col);
     return "abcdefgh"[col] + (8 - row);
