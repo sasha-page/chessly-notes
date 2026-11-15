@@ -661,6 +661,48 @@ test('toPlacement: unknown letter "X" → RangeError', () => {
   );
 });
 
+test("toPlacement: null in place of the grid → TypeError", () => {
+  assertThrows(
+    () => internals.toPlacement(null),
+    TypeError,
+    "grid must be an array of 8 rows, got null",
+  );
+});
+
+test('toPlacement: row 4 is the string "8" → TypeError', () => {
+  const stringRow = grid([
+    "r..qk..r",
+    "ppp..ppp",
+    "..n.bn..",
+    "...pp...",
+    "........",
+    "..NBPN..",
+    "PPP..PPP",
+    "R..QK..R",
+  ]);
+  stringRow[4] = "8";
+  assertThrows(() => internals.toPlacement(stringRow), TypeError, 'row 4 must be an array, got "8"');
+});
+
+test("toPlacement: undefined at row 6, col 1 → TypeError", () => {
+  const hole = grid([
+    "...k....",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "...K....",
+  ]);
+  hole[6][1] = undefined;
+  assertThrows(
+    () => internals.toPlacement(hole),
+    TypeError,
+    "row 6, col 1 must be a piece letter or null, got undefined",
+  );
+});
+
 showResults();
 </script>
 </body>
