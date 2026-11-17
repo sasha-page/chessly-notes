@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="light dark">
+  <title>position.js unit tests</title>
+  <style>
+    body { font: 15px/1.5 monospace; margin: 16px; }
+    .pass { color: #1a7f37; }
+    .fail { color: #cf222e; }
+    @media (prefers-color-scheme: dark) {
+      .pass { color: #4ac26b; }
+      .fail { color: #ff7b72; }
+    }
+    pre { margin: 0 0 0 3em; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+<h1>position.js unit tests</h1>
+<p id="summary">Running…</p>
+<ul id="results"></ul>
+
+<script src="../src/position.js"></script>
+<script src="runner.js"></script>
+<script>
+"use strict";
+
+/*
+ * Unit tests for the helpers in src/position.js. Open this file in Firefox to
+ * run them. Each test writes its own input inline, only what the helper reads.
+ * The integration tests for findBoards and readBoard are in position.test.html.
+ */
+
+const { internals } = ChessNotesPosition;
+
+// ------------------------------------------------- orientationFromLabels (unit)
+
+// Reads the top rank label.
+
+test('orientationFromLabels: labels "8", "7" → "white"', () => {
+  const board = document.createElement("div");
+  board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">8</div>
+    <div class="ChessBoard_rankNumber__YLkVg">7</div>`;
+  assertEqual(internals.orientationFromLabels(board), "white");
+});
+
+test('orientationFromLabels: labels "1", "2" → "black"', () => {
+  const board = document.createElement("div");
+  board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">1</div>
+    <div class="ChessBoard_rankNumber__YLkVg">2</div>`;
+  assertEqual(internals.orientationFromLabels(board), "black");
+});
+
+test('orientationFromLabels: whitespace around the label is ignored ("\\n    8\\n  ", "7" → "white")', () => {
+  const board = document.createElement("div");
+  // Laid out like the real page, with the number on its own line.
+  board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">
+    8
+  </div>
+    <div class="ChessBoard_rankNumber__YLkVg">7</div>`;
+  assertEqual(internals.orientationFromLabels(board), "white");
+});
+
+// Returns null when the labels don't say.
+
+test("orientationFromLabels: no labels (an empty container) → null", () => {
+  const board = document.createElement("div");
+  assertEqual(internals.orientationFromLabels(board), null);
+});
+
+test('orientationFromLabels: top label is not "8" or "1" ("4", "8" → null)', () => {
+  const board = document.createElement("div");
+  board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">4</div>
+    <div class="ChessBoard_rankNumber__YLkVg">8</div>`;
+  assertEqual(internals.orientationFromLabels(board), null);
+});
+
+// ---------------------------------------------------- orientationFromIds (unit)
+
+// Only idSquare and screen are read. Squares are { row, col } with row 0 = rank 8
+// and col 0 = the a-file; screen is counted from the top-left of the board as shown.
+
+// Returns the side when every piece agrees.
+
+test('orientationFromIds: every piece fits White at bottom → "white"', () => {
+  const pieces = [
+    { idSquare: { row: 6, col: 4 }, screen: { row: 6, col: 4 } }, // e2
+    { idSquare: { row: 0, col: 1 }, screen: { row: 0, col: 1 } }, // b8
+  ];
+  assertEqual(internals.orientationFromIds(pieces), "white");
+});
+
+test('orientationFromIds: every piece fits Black at bottom → "black"', () => {
+  const pieces = [
+    { idSquare: { row: 4, col: 4 }, screen: { row: 3, col: 3 } }, // e4
+    { idSquare: { row: 7, col: 6 }, screen: { row: 0, col: 1 } }, // g1
+  ];
+  assertEqual(internals.orientationFromIds(pieces), "black");
+});
+
+test('orientationFromIds: pieces with no id or no screen square are skipped → "black"', () => {
+  const pieces = [
+    { idSquare: null, screen: { row: 2, col: 2 } },
+    { idSquare: { row: 3, col: 6 }, screen: null },
+    { idSquare: { row: 7, col: 0 }, screen: { row: 0, col: 7 } }, // a1
+  ];
+  assertEqual(internals.orientationFromIds(pieces), "black");
+});
+
+// Returns null when it can't tell.
+
+test("orientationFromIds: two pieces disagree → null", () => {
+  const pieces = [
+    { idSquare: { row: 1, col: 3 }, screen: { row: 1, col: 3 } }, // d7, fits White
+    { idSquare: { row: 5, col: 2 }, screen: { row: 2, col: 5 } }, // c3, fits Black
+  ];
+  assertEqual(internals.orientationFromIds(pieces), null);
+});
+
+test("orientationFromIds: a piece fits neither side as the first piece → null", () => {
+  const pieces = [
+    { idSquare: { row: 7, col: 7 }, screen: { row: 6, col: 7 } }, // h1, fits neither
+    { idSquare: { row: 6, col: 0 }, screen: { row: 6, col: 0 } }, // a2, fits White
+  ];
+  assertEqual(internals.orientationFromIds(pieces), null);
+});
+
+test("orientationFromIds: a piece fits neither side as the second piece → null", () => {
+  const pieces = [
+    { idSquare: { row: 7, col: 1 }, screen: { row: 7, col: 1 } }, // b1, fits White
+    { idSquare: { row: 2, col: 5 }, screen: { row: 2, col: 4 } }, // f6, fits neither
+  ];
+  assertEqual(internals.orientationFromIds(pieces), null);
+});
+
+test("orientationFromIds: no usable pieces → null", () => {
+  const pieces = [
+    { idSquare: null, screen: { row: 5, col: 5 } },
+  ];
+  assertEqual(internals.orientationFromIds(pieces), null);
+});
+
+// ----------------------------------------------------- parseScreenSquare (unit)
+
+// Reads a square from the transform.
+
+test("parseScreenSquare: translate(400%, 300%) → row 3, col 4", () => {
+  const el = document.createElement("div");
+  el.style.transform = "translate(400%, 300%)";
+  assertEqual(internals.parseScreenSquare(el), { row: 3, col: 4 });
+});
+
+test("parseScreenSquare: the far corner squares count: translate(700%, 0%) → row 0, col 7", () => {
+  const el = document.createElement("div");
+  el.style.transform = "translate(700%, 0%)";
+  assertEqual(internals.parseScreenSquare(el), { row: 0, col: 7 });
+});
+
+// Returns null when the piece isn't on a square.
+
+test("parseScreenSquare: between squares: translate(450%, 200%) → null", () => {
+  const el = document.createElement("div");
+  el.style.transform = "translate(450%, 200%)";
+  assertEqual(internals.parseScreenSquare(el), null);
+});
+
+test("parseScreenSquare: off the right edge: translate(800%, 100%) → null", () => {
+  const el = document.createElement("div");
+  el.style.transform = "translate(800%, 100%)";
+  assertEqual(internals.parseScreenSquare(el), null);
+});
+
+test("parseScreenSquare: off the top edge: translate(600%, -100%) → null", () => {
+  const el = document.createElement("div");
+  el.style.transform = "translate(600%, -100%)";
+  assertEqual(internals.parseScreenSquare(el), null);
+});
+
+test("parseScreenSquare: no transform: an element with no style → null", () => {
+  const el = document.createElement("div");
+  assertEqual(internals.parseScreenSquare(el), null);
+});
+
+// --------------------------------------------------------- parseIdSquare (unit)
+
+// Reads a square from the id.
+
+test('parseIdSquare: "44" → row 4, col 4', () => {
+  const el = document.createElement("div");
+  el.id = "44";
+  assertEqual(internals.parseIdSquare(el), { row: 4, col: 4 });
+});
+
+// Returns null for other ids.
+
+for (const [label, id] of [
+  ["empty", ""],
+  ["a letter", "8a"],
+  ["three digits", "123"],
+  ["a digit past 7", "09"],
+]) {
+  test(`parseIdSquare: ${label}: "${id}" → null`, () => {
+    const el = document.createElement("div");
+    el.id = id;
+    assertEqual(internals.parseIdSquare(el), null);
+  });
+}
+
+// ------------------------------------------------------------ squareName (unit)
+
+// Names a square.
+
+for (const [name, square] of [
+  ["a8", { row: 0, col: 0 }],
+  ["h1", { row: 7, col: 7 }],
+  ["e4", { row: 4, col: 4 }],
+]) {
+  test(`squareName: row ${square.row}, col ${square.col} → "${name}"`, () => {
+    assertEqual(internals.squareName(square), name);
+  });
+}
+
+// Throws unless row and col are both whole numbers 0–7.
+
+for (const [label, square, message] of [
+  ["row past 7", { row: 8, col: 2 }, "row must be a whole number from 0 to 7, got 8"],
+  ["row below 0", { row: -1, col: 5 }, "row must be a whole number from 0 to 7, got -1"],
+  ["col past 7", { row: 3, col: 8 }, "col must be a whole number from 0 to 7, got 8"],
+  ["col below 0", { row: 6, col: -1 }, "col must be a whole number from 0 to 7, got -1"],
+]) {
+  test(`squareName: off the board: ${label} → RangeError`, () => {
+    assertThrows(() => internals.squareName(square), RangeError, message);
+  });
+}
+
+for (const [label, square, message] of [
+  ["row", { row: 2.5, col: 3 }, "row must be a whole number from 0 to 7, got 2.5"],
+  ["col", { row: 1, col: 6.5 }, "col must be a whole number from 0 to 7, got 6.5"],
+]) {
+  test(`squareName: between squares: ${label} not whole → RangeError`, () => {
+    assertThrows(() => internals.squareName(square), RangeError, message);
+  });
+}
+
+for (const [label, square, message] of [
+  ["a string row", { row: "4", col: 0 }, 'row must be a number, got "4"'],
+  ["no col", { row: 7 }, "col must be a number, got undefined"],
+  ["null in place of the square", null, "squareName needs a square like { row, col }, got null"],
+]) {
+  test(`squareName: not a number: ${label} → TypeError`, () => {
+    assertThrows(() => internals.squareName(square), TypeError, message);
+  });
+}
+
+// ----------------------------------------------------------- toPlacement (unit)
+
+/** An 8x8 grid from one string per rank, rank 8 first, "." for an empty square. */
+function grid(ranks) {
+  return ranks.map((rank) => [...rank].map((c) => (c === "." ? null : c)));
+}
+
+// Turns a grid into FEN piece placement.
+
+test('toPlacement: empty grid → "8/8/8/8/8/8/8/8"', () => {
+  const empty = grid([
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+  ]);
+  assertEqual(internals.toPlacement(empty), "8/8/8/8/8/8/8/8");
+});
+
+test("toPlacement: grid full of pawns, Black's on ranks 8–5 and White's on 4–1", () => {
+  const pawns = grid([
+    "pppppppp",
+    "pppppppp",
+    "pppppppp",
+    "pppppppp",
+    "PPPPPPPP",
+    "PPPPPPPP",
+    "PPPPPPPP",
+    "PPPPPPPP",
+  ]);
+  assertEqual(
+    internals.toPlacement(pawns),
+    "pppppppp/pppppppp/pppppppp/pppppppp/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP",
+  );
+});
+
+test("toPlacement: starting grid → starting placement", () => {
+  const start = grid([
+    "rnbqkbnr",
+    "pppppppp",
+    "........",
+    "........",
+    "........",
+    "........",
+    "PPPPPPPP",
+    "RNBQKBNR",
+  ]);
+  assertEqual(internals.toPlacement(start), "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+});
+
+test("toPlacement: grid after 1.e4 → placement after 1.e4", () => {
+  const afterE4 = grid([
+    "rnbqkbnr",
+    "pppppppp",
+    "........",
+    "........",
+    "....P...",
+    "........",
+    "PPPP.PPP",
+    "RNBQKBNR",
+  ]);
+  assertEqual(internals.toPlacement(afterE4), "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR");
+});
+
+test("toPlacement: grid after 1.e4 e5 → placement after 1.e4 e5", () => {
+  const afterE4E5 = grid([
+    "rnbqkbnr",
+    "pppp.ppp",
+    "........",
+    "....p...",
+    "....P...",
+    "........",
+    "PPPP.PPP",
+    "RNBQKBNR",
+  ]);
+  assertEqual(internals.toPlacement(afterE4E5), "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR");
+});
+
+// Throws unless the grid is 8 rows of 8 cells, each a piece letter or null.
+
+test("toPlacement: 7 rows → RangeError", () => {
+  const short = grid([
+    "r...k..r",
+    "pppppppp",
+    "........",
+    "........",
+    "........",
+    "PPPPPPPP",
+    "R...K..R",
+  ]);
+  assertThrows(() => internals.toPlacement(short), RangeError, "grid must have 8 rows, got 7");
+});
+
+test("toPlacement: 9 rows → RangeError", () => {
+  const long = grid([
+    "....k...",
+    "........",
+    "...q....",
+    "........",
+    "........",
+    "........",
+    "..N.....",
+    "........",
+    "......K.",
+  ]);
+  assertThrows(() => internals.toPlacement(long), RangeError, "grid must have 8 rows, got 9");
+});
+
+test("toPlacement: row 3 of 9 squares → RangeError", () => {
+  const wide = grid([
+    "r.bqkb.r",
+    "pp..pppp",
+    "..n..n..",
+    "..pp.....",
+    "...P....",
+    "..N..N..",
+    "PPP.PPPP",
+    "R.BQKB.R",
+  ]);
+  assertThrows(() => internals.toPlacement(wide), RangeError, "row 3 must have 8 squares, got 9");
+});
+
+test('toPlacement: unknown letter "X" → RangeError', () => {
+  const unknown = grid([
+    "rnbqkbnr",
+    "pppppppp",
+    ".....X..",
+    "........",
+    "........",
+    "........",
+    "PPPPPPPP",
+    "RNBQKBNR",
+  ]);
+  assertThrows(
+    () => internals.toPlacement(unknown),
+    RangeError,
+    'row 2, col 5 must be a FEN piece letter or null, got "X"',
+  );
+});
+
+test("toPlacement: undefined at row 6, col 1 → RangeError", () => {
+  const hole = grid([
+    "...k....",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "........",
+    "...K....",
+  ]);
+  hole[6][1] = undefined;
+  assertThrows(
+    () => internals.toPlacement(hole),
+    RangeError,
+    "row 6, col 1 must be a FEN piece letter or null, got undefined",
+  );
+});
+
+test("toPlacement: null in place of the grid → TypeError", () => {
+  assertThrows(
+    () => internals.toPlacement(null),
+    TypeError,
+    "grid must be an array of 8 rows, got null",
+  );
+});
+
+test('toPlacement: row 4 is the string "8" → TypeError', () => {
+  const stringRow = grid([
+    "r..qk..r",
+    "ppp..ppp",
+    "..n.bn..",
+    "...pp...",
+    "........",
+    "..NBPN..",
+    "PPP..PPP",
+    "R..QK..R",
+  ]);
+  stringRow[4] = "8";
+  assertThrows(() => internals.toPlacement(stringRow), TypeError, 'row 4 must be an array, got "8"');
+});
+
+showResults();
+</script>
+</body>
+</html>
