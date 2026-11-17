@@ -44,6 +44,30 @@ function grid(ranks) {
   return ranks.map((rank) => [...rank].map((c) => (c === "." ? null : c)));
 }
 
+test("grid: ranks with k, q, N, P and K → the exact 8x8 array, rank 8 first", () => {
+  const built = grid([
+    "k.......",
+    "........",
+    ".....q..",
+    "........",
+    "........",
+    "..N.....",
+    "....P...",
+    ".......K",
+  ]);
+  const _ = null;
+  assertEqual(built, [
+    ["k", _, _, _, _, _, _, _],
+    [_, _, _, _, _, _, _, _],
+    [_, _, _, _, _, "q", _, _],
+    [_, _, _, _, _, _, _, _],
+    [_, _, _, _, _, _, _, _],
+    [_, _, "N", _, _, _, _, _],
+    [_, _, _, _, "P", _, _, _],
+    [_, _, _, _, _, _, _, "K"],
+  ]);
+});
+
 // ------------------------------------------------- orientationFromLabels (unit)
 
 // Reads the top rank label.
