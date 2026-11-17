@@ -1,0 +1,17 @@
+{
+  "name": "chess-position-notes",
+  "private": true,
+  "description": "Development tools for the Chess Position Notes Firefox extension. The extension itself doesn't use Node.",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run --project jsdom",
+    "test:firefox": "vitest run --project firefox",
+    "test:watch": "vitest --project jsdom"
+  },
+  "devDependencies": {
+    "@vitest/browser-playwright": "5.1.0",
+    "jsdom": "31.0.1",
+    "playwright": "1.65.1",
+    "vitest": "5.1.0"
+  }
+}

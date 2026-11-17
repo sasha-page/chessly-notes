@@ -8,6 +8,8 @@
 # Tools we may add later
 node_modules/
 web-ext-artifacts/
+# Screenshots Vitest's browser mode saves when a test fails
+.vitest/
 
 # OS clutter
 Thumbs.db
