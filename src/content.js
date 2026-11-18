@@ -1,4 +1,4 @@
-"use strict";
+import { ChessNotesPosition } from "./position.js";
 
 /**
  * Watches the page for board changes and logs the position each time it

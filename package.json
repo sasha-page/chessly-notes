@@ -4,12 +4,15 @@
   "description": "Development tools for the Chess Position Notes Firefox extension. The extension itself doesn't use Node.",
   "type": "module",
   "scripts": {
+    "build": "esbuild src/content.js --bundle --format=iife --target=firefox140 --outfile=dist/content.js",
+    "build:watch": "esbuild src/content.js --bundle --format=iife --target=firefox140 --outfile=dist/content.js --watch",
     "test": "vitest run --project jsdom",
     "test:firefox": "vitest run --project firefox",
     "test:watch": "vitest --project jsdom"
   },
   "devDependencies": {
     "@vitest/browser-playwright": "5.1.0",
+    "esbuild": "0.28.2",
     "jsdom": "31.0.1",
     "playwright": "1.65.1",
     "vitest": "5.1.0"
