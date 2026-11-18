@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Reads the chess position from the site's board HTML.
  *
@@ -24,7 +22,7 @@
  * Class names end in a build hash (e.g. "__m95pT") that can change whenever
  * the site is updated, so we only match the stable start of each name.
  */
-const ChessNotesPosition = (() => {
+export const ChessNotesPosition = (() => {
   const SELECTORS = {
     board: '[class*="ChessBoard_relative"]',
     // Pieces still on the board: skip captured ones the site keeps hidden.

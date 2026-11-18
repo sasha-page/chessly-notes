@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { ChessNotesPosition } from "./support/load-script.js";
+import { ChessNotesPosition } from "../src/position.js";
 import { makeBoard, pieceOn, idOf } from "./support/board.js";
 
 /*

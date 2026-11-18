@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { ChessNotesPosition } from "./support/load-script.js";
+import { ChessNotesPosition } from "../src/position.js";
 
 /*
  * Unit tests for the helpers in src/position.js. Each test writes its own
