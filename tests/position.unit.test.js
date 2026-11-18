@@ -1,6 +1,5 @@
 import { describe, test, expect } from "vitest";
 import { ChessNotesPosition } from "./support/load-script.js";
-import { expectThrowsExactly } from "./support/assertions.js";
 
 /*
  * Unit tests for the helpers in src/position.js. Each test writes its own
@@ -294,7 +293,7 @@ describe("squareName", () => {
     ["col below 0", { row: 6, col: -1 }, "col must be a whole number from 0 to 7, got -1"],
   ]) {
     test(`off the board: ${label} → RangeError`, () => {
-      expectThrowsExactly(() => internals.squareName(square), RangeError, message);
+      expect(() => internals.squareName(square)).toThrow(new RangeError(message));
     });
   }
 
@@ -303,7 +302,7 @@ describe("squareName", () => {
     ["col", { row: 1, col: 6.5 }, "col must be a whole number from 0 to 7, got 6.5"],
   ]) {
     test(`between squares: ${label} not whole → RangeError`, () => {
-      expectThrowsExactly(() => internals.squareName(square), RangeError, message);
+      expect(() => internals.squareName(square)).toThrow(new RangeError(message));
     });
   }
 
@@ -313,7 +312,7 @@ describe("squareName", () => {
     ["null in place of the square", null, "squareName needs a square like { row, col }, got null"],
   ]) {
     test(`not a number: ${label} → TypeError`, () => {
-      expectThrowsExactly(() => internals.squareName(square), TypeError, message);
+      expect(() => internals.squareName(square)).toThrow(new TypeError(message));
     });
   }
 });
@@ -405,7 +404,7 @@ describe("toPlacement", () => {
       "PPPPPPPP",
       "R...K..R",
     ]);
-    expectThrowsExactly(() => internals.toPlacement(short), RangeError, "grid must have 8 rows, got 7");
+    expect(() => internals.toPlacement(short)).toThrow(new RangeError("grid must have 8 rows, got 7"));
   });
 
   test("9 rows → RangeError", () => {
@@ -420,7 +419,7 @@ describe("toPlacement", () => {
       "........",
       "......K.",
     ]);
-    expectThrowsExactly(() => internals.toPlacement(long), RangeError, "grid must have 8 rows, got 9");
+    expect(() => internals.toPlacement(long)).toThrow(new RangeError("grid must have 8 rows, got 9"));
   });
 
   test("row 3 of 9 squares → RangeError", () => {
@@ -434,7 +433,7 @@ describe("toPlacement", () => {
       "PPP.PPPP",
       "R.BQKB.R",
     ]);
-    expectThrowsExactly(() => internals.toPlacement(wide), RangeError, "row 3 must have 8 squares, got 9");
+    expect(() => internals.toPlacement(wide)).toThrow(new RangeError("row 3 must have 8 squares, got 9"));
   });
 
   test('unknown letter "X" → RangeError', () => {
@@ -448,10 +447,8 @@ describe("toPlacement", () => {
       "PPPPPPPP",
       "RNBQKBNR",
     ]);
-    expectThrowsExactly(
-      () => internals.toPlacement(unknown),
-      RangeError,
-      'row 2, col 5 must be a FEN piece letter or null, got "X"',
+    expect(() => internals.toPlacement(unknown)).toThrow(
+      new RangeError('row 2, col 5 must be a FEN piece letter or null, got "X"'),
     );
   });
 
@@ -467,19 +464,13 @@ describe("toPlacement", () => {
       "...K....",
     ]);
     hole[6][1] = undefined;
-    expectThrowsExactly(
-      () => internals.toPlacement(hole),
-      RangeError,
-      "row 6, col 1 must be a FEN piece letter or null, got undefined",
+    expect(() => internals.toPlacement(hole)).toThrow(
+      new RangeError("row 6, col 1 must be a FEN piece letter or null, got undefined"),
     );
   });
 
   test("null in place of the grid → TypeError", () => {
-    expectThrowsExactly(
-      () => internals.toPlacement(null),
-      TypeError,
-      "grid must be an array of 8 rows, got null",
-    );
+    expect(() => internals.toPlacement(null)).toThrow(new TypeError("grid must be an array of 8 rows, got null"));
   });
 
   test('row 4 is the string "8" → TypeError', () => {
@@ -494,6 +485,6 @@ describe("toPlacement", () => {
       "R..QK..R",
     ]);
     stringRow[4] = "8";
-    expectThrowsExactly(() => internals.toPlacement(stringRow), TypeError, 'row 4 must be an array, got "8"');
+    expect(() => internals.toPlacement(stringRow)).toThrow(new TypeError('row 4 must be an array, got "8"'));
   });
 });
