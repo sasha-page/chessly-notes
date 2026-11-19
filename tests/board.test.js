@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { square, idOf } from "./support/board.js";
+import { square, idOf, div } from "./support/board.js";
 
 /*
  * Tests for the board fixtures in tests/support/board.js. Each expected value
@@ -34,4 +34,14 @@ describe("idOf", () => {
       expect(idOf(name)).toBe(expected);
     });
   }
+});
+
+describe("div", () => {
+  // Makes a div with the given classes.
+
+  test('"flex-column ChessBoard_board__Vgpvk" → an empty div with those classes', () => {
+    expect(div("flex-column ChessBoard_board__Vgpvk").outerHTML).toBe(
+      '<div class="flex-column ChessBoard_board__Vgpvk"></div>',
+    );
+  });
 });
