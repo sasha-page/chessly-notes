@@ -1,5 +1,6 @@
 import { describe, test, expect } from "vitest";
-import { square, idOf, div, makePiece } from "./board.js";
+import { square, idOf, div, makePiece, makeBoard } from "./board.js";
+import expectedBoardsHtml from "./expected_boards.html?raw";
 
 /*
  * Tests for the board fixtures in tests/board.js. Each expected value
@@ -50,7 +51,7 @@ describe("makePiece", () => {
   // Draws one piece wrapper the way the site does. Each expected wrapper is
   // copied from a sample file.
 
-  test('White at bottom: "P" on row 6, col 3 → the d2 pawn in starting_position.html', () => {
+  test('white at bottom: "P" on row 6, col 3 → the d2 pawn in starting_position.html', () => {
     const el = makePiece("P", { row: 6, col: 3 }, "white");
     expect({
       tag: el.tagName,
@@ -67,7 +68,7 @@ describe("makePiece", () => {
     });
   });
 
-  test('Black at bottom, turned 180°: "N" on row 7, col 1 → the b1 knight in e4_from_black.html', () => {
+  test('black at bottom, turned 180°: "N" on row 7, col 1 → the b1 knight in e4_from_black.html', () => {
     const el = makePiece("N", { row: 7, col: 1 }, "black");
     expect({
       tag: el.tagName,
@@ -84,7 +85,7 @@ describe("makePiece", () => {
     });
   });
 
-  test('a captured piece: "p" on row 4, col 3, Black at bottom → the captured black pawn in capture.html', () => {
+  test('a captured piece: "p" on row 4, col 3, black at bottom → the captured black pawn in capture.html', () => {
     const el = makePiece("p", { row: 4, col: 3 }, "black", true);
     expect({
       tag: el.tagName,
@@ -99,5 +100,49 @@ describe("makePiece", () => {
       transform: "translate(400%, 300%)",
       content: '<div class="piece_piece__JbwmA"><img alt="p" class="piece_image__sXVkQ"></div>',
     });
+  });
+});
+
+describe("makeBoard", () => {
+  // Builds the boards in expected_boards.html, which were checked against the
+  // site's sample files. The site's own HTML has more than makeBoard builds,
+  // so the tests compare with these boards instead.
+
+  const expectedPage = new DOMParser().parseFromString(expectedBoardsHtml, "text/html");
+
+  /** HTML with one tag per line, so a failure shows which tags differ. */
+  function tagLines(html) {
+    return html.replace(/>\s*</g, ">\n<");
+  }
+
+  /** The board in the section with this id of expected_boards.html. */
+  function expectedBoard(sectionId) {
+    return expectedPage.querySelector(`#${sectionId} [class*="ChessBoard_relative"]`).outerHTML;
+  }
+
+  test("starting position, white at bottom", () => {
+    const board = makeBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", { orientation: "white" });
+    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("starting-position")));
+  });
+
+  test("after 1.e4 e5, white at bottom", () => {
+    const board = makeBoard("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR", { orientation: "white" });
+    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("after-e4-e5")));
+  });
+
+  test("after 1.e4, black at bottom", () => {
+    const board = makeBoard("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR", { orientation: "black" });
+    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("after-e4-from-black")));
+  });
+
+  test("Advance Caro-Kann with captures on d4, black at bottom", () => {
+    const board = makeBoard("r1bqkbnr/pp2pppp/2n5/3pP3/3P4/5N2/PP3PPP/RNBQKB1R", {
+      orientation: "black",
+      captured: [
+        { letter: "P", on: "d4" },
+        { letter: "p", on: "d4" },
+      ],
+    });
+    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("captures-on-d4")));
   });
 });
