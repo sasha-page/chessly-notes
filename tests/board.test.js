@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { square } from "./support/board.js";
+import { square, idOf } from "./support/board.js";
 
 /*
  * Tests for the board fixtures in tests/support/board.js. Each expected value
@@ -17,6 +17,21 @@ describe("square", () => {
   ]) {
     test(`"${name}" → row ${expected.row}, col ${expected.col}`, () => {
       expect(square(name)).toStrictEqual(expected);
+    });
+  }
+});
+
+describe("idOf", () => {
+  // Gives the id the site uses for a square. "70" and "07" are the ids of the
+  // rooks on a1 and h8 in starting_position.html.
+
+  for (const [name, expected] of [
+    ["a1", "70"],
+    ["h8", "07"],
+    ["e4", "44"],
+  ]) {
+    test(`"${name}" → "${expected}"`, () => {
+      expect(idOf(name)).toBe(expected);
     });
   }
 });
