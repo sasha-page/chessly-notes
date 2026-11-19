@@ -115,9 +115,9 @@ describe("makeBoard", () => {
     return html.replace(/>\s*</g, ">\n<");
   }
 
-  /** The board in the section with this id of expected_boards.html. */
-  function expectedBoard(sectionId) {
-    return expectedPage.querySelector(`#${sectionId} [class*="ChessBoard_relative"]`).outerHTML;
+  /** The board in the section with this id of the given page. */
+  function expectedBoard(page, sectionId) {
+    return page.querySelector(`#${sectionId} [class*="ChessBoard_relative"]`).outerHTML;
   }
 
   test("tagLines puts each tag on its own line, dropping the whitespace between tags", () => {
@@ -127,25 +127,27 @@ describe("makeBoard", () => {
   });
 
   test("expectedBoard gives the board container of the section with that id", () => {
-    const board = expectedBoard("after-e4-from-black");
-    expect(board.startsWith('<div class="ChessBoard_relative__3gr96">')).toBe(true);
-    // Only this section has the e4 pawn drawn at column 3, row 3.
-    expect(board).toContain('id="44" style="transform: translate(300%, 300%);"');
+    const page = new DOMParser().parseFromString(
+      '<section id="first"><h2>first</h2><div class="ChessBoard_relative__3gr96">first board</div></section>' +
+        '<section id="second"><h2>second</h2><div class="ChessBoard_relative__3gr96">second board</div></section>',
+      "text/html",
+    );
+    expect(expectedBoard(page, "second")).toBe('<div class="ChessBoard_relative__3gr96">second board</div>');
   });
 
   test("starting position, white at bottom", () => {
     const board = makeBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", { orientation: "white" });
-    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("starting-position")));
+    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard(expectedPage, "starting-position")));
   });
 
   test("after 1.e4 e5, white at bottom", () => {
     const board = makeBoard("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR", { orientation: "white" });
-    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("after-e4-e5")));
+    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard(expectedPage, "after-e4-e5")));
   });
 
   test("after 1.e4, black at bottom", () => {
     const board = makeBoard("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR", { orientation: "black" });
-    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("after-e4-from-black")));
+    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard(expectedPage, "after-e4-from-black")));
   });
 
   test("Advance Caro-Kann with captures on d4, black at bottom", () => {
@@ -156,7 +158,7 @@ describe("makeBoard", () => {
         { letter: "p", on: "d4" },
       ],
     });
-    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("captures-on-d4")));
+    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard(expectedPage, "captures-on-d4")));
   });
 });
 
