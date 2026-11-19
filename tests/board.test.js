@@ -126,6 +126,13 @@ describe("makeBoard", () => {
     );
   });
 
+  test("expectedBoard gives the board container of the section with that id", () => {
+    const board = expectedBoard("after-e4-from-black");
+    expect(board.startsWith('<div class="ChessBoard_relative__3gr96">')).toBe(true);
+    // Only this section has the e4 pawn drawn at column 3, row 3.
+    expect(board).toContain('id="44" style="transform: translate(300%, 300%);"');
+  });
+
   test("starting position, white at bottom", () => {
     const board = makeBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", { orientation: "white" });
     expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("starting-position")));
