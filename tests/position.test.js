@@ -15,7 +15,7 @@ const read = (board) => ChessNotesPosition.readBoard(board);
 const START = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 const AFTER_E4 = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR";
 const AFTER_E4_E5 = "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR";
-// Advance Caro-Kann after 1.e4 e6 2.d4 d5 3.e5 c5 4.c3 Nc6 5.Nf3 cxd4 6.cxd4.
+// Advance Caro-Kann after 1.e4 c6 2.d4 d5 3.e5 c5 4.c3 Nc6 5.Nf3 cxd4 6.cxd4.
 // The pawns captured on d4 stay in the page, hidden (see capture.html).
 const AFTER_CAPTURES = "r1bqkbnr/pp2pppp/2n5/3pP3/3P4/5N2/PP3PPP/RNBQKB1R";
 const CAPTURED_ON_D4 = [{ letter: "P", on: "d4" }, { letter: "p", on: "d4" }];
