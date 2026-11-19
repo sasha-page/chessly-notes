@@ -134,4 +134,15 @@ describe("makeBoard", () => {
     const board = makeBoard("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR", { orientation: "black" });
     expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("after-e4-from-black")));
   });
+
+  test("Advance Caro-Kann with captures on d4, black at bottom", () => {
+    const board = makeBoard("r1bqkbnr/pp2pppp/2n5/3pP3/3P4/5N2/PP3PPP/RNBQKB1R", {
+      orientation: "black",
+      captured: [
+        { letter: "P", on: "d4" },
+        { letter: "p", on: "d4" },
+      ],
+    });
+    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("captures-on-d4")));
+  });
 });
