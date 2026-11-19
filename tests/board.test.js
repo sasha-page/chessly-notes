@@ -127,10 +127,12 @@ describe("makeBoard", () => {
   });
 
   test("expectedBoard gives the board container of the section with that id", () => {
-    const board = expectedBoard("after-e4-from-black");
-    expect(board.startsWith('<div class="ChessBoard_relative__3gr96">')).toBe(true);
-    // Only this section has the e4 pawn drawn at column 3, row 3.
-    expect(board).toContain('id="44" style="transform: translate(300%, 300%);"');
+    const page = new DOMParser().parseFromString(
+      '<section id="first"><h2>first</h2><div class="ChessBoard_relative__3gr96">first board</div></section>' +
+        '<section id="second"><h2>second</h2><div class="ChessBoard_relative__3gr96">second board</div></section>',
+      "text/html",
+    );
+    expect(expectedBoard(page, "second")).toBe('<div class="ChessBoard_relative__3gr96">second board</div>');
   });
 
   test("starting position, white at bottom", () => {
