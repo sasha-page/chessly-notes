@@ -66,4 +66,21 @@ describe("makePiece", () => {
       content: '<div class="piece_piece__JbwmA"><img alt="P" class="piece_image__sXVkQ"></div>',
     });
   });
+
+  test('Black at bottom, turned 180°: "N" on row 7, col 1 → the b1 knight in e4_from_black.html', () => {
+    const el = makePiece("N", { row: 7, col: 1 }, "black");
+    expect({
+      tag: el.tagName,
+      id: el.id,
+      className: el.className,
+      transform: el.style.transform,
+      content: el.innerHTML,
+    }).toStrictEqual({
+      tag: "DIV",
+      id: "71",
+      className: "ChessBoard_pieceWrapper__m95pT",
+      transform: "translate(600%, 0%)",
+      content: '<div class="piece_piece__JbwmA"><img alt="N" class="piece_image__sXVkQ"></div>',
+    });
+  });
 });
