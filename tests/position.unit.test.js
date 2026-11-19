@@ -146,7 +146,7 @@ describe("orientationFromIds", () => {
 
   // Returns the side when every piece agrees.
 
-  test('every piece fits White at bottom → "white"', () => {
+  test('every piece fits white at bottom → "white"', () => {
     const pieces = [
       { idSquare: { row: 6, col: 4 }, screen: { row: 6, col: 4 } }, // e2
       { idSquare: { row: 0, col: 1 }, screen: { row: 0, col: 1 } }, // b8
@@ -154,7 +154,7 @@ describe("orientationFromIds", () => {
     expect(internals.orientationFromIds(pieces)).toBe("white");
   });
 
-  test('every piece fits Black at bottom → "black"', () => {
+  test('every piece fits black at bottom → "black"', () => {
     const pieces = [
       { idSquare: { row: 4, col: 4 }, screen: { row: 3, col: 3 } }, // e4
       { idSquare: { row: 7, col: 6 }, screen: { row: 0, col: 1 } }, // g1

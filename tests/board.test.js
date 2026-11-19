@@ -50,7 +50,7 @@ describe("makePiece", () => {
   // Draws one piece wrapper the way the site does. Each expected wrapper is
   // copied from a sample file.
 
-  test('White at bottom: "P" on row 6, col 3 → the d2 pawn in starting_position.html', () => {
+  test('white at bottom: "P" on row 6, col 3 → the d2 pawn in starting_position.html', () => {
     const el = makePiece("P", { row: 6, col: 3 }, "white");
     expect({
       tag: el.tagName,
@@ -67,7 +67,7 @@ describe("makePiece", () => {
     });
   });
 
-  test('Black at bottom, turned 180°: "N" on row 7, col 1 → the b1 knight in e4_from_black.html', () => {
+  test('black at bottom, turned 180°: "N" on row 7, col 1 → the b1 knight in e4_from_black.html', () => {
     const el = makePiece("N", { row: 7, col: 1 }, "black");
     expect({
       tag: el.tagName,
@@ -84,7 +84,7 @@ describe("makePiece", () => {
     });
   });
 
-  test('a captured piece: "p" on row 4, col 3, Black at bottom → the captured black pawn in capture.html', () => {
+  test('a captured piece: "p" on row 4, col 3, black at bottom → the captured black pawn in capture.html', () => {
     const el = makePiece("p", { row: 4, col: 3 }, "black", true);
     expect({
       tag: el.tagName,
