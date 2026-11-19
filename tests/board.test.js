@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { square, idOf, div, makePiece, makeBoard } from "./board.js";
+import { square, idOf, div, makePiece, makeBoard, pieceOn } from "./board.js";
 import expectedBoardsHtml from "./expected_boards.html?raw";
 
 /*
@@ -157,5 +157,22 @@ describe("makeBoard", () => {
       ],
     });
     expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("captures-on-d4")));
+  });
+});
+
+describe("pieceOn", () => {
+  // Finds the piece still on a square, skipping captured ones.
+
+  test('after 1.e4, "e4" → the white pawn\'s wrapper', () => {
+    const board = makeBoard("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR", { orientation: "white" });
+    expect(pieceOn(board, "e4").outerHTML).toBe(
+      '<div class="ChessBoard_pieceWrapper__m95pT" id="44" style="transform: translate(400%, 400%);">' +
+        '<div class="piece_piece__JbwmA"><img alt="P" class="piece_image__sXVkQ"></div></div>',
+    );
+  });
+
+  test('an empty board with a captured "p" on d4: "d4" → null', () => {
+    const board = makeBoard("8/8/8/8/8/8/8/8", { orientation: "white", captured: [{ letter: "p", on: "d4" }] });
+    expect(pieceOn(board, "d4")).toBe(null);
   });
 });
