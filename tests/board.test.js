@@ -124,4 +124,9 @@ describe("makeBoard", () => {
     const board = makeBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", { orientation: "white" });
     expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("starting-position")));
   });
+
+  test("after 1.e4 e5, white at bottom", () => {
+    const board = makeBoard("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR", { orientation: "white" });
+    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("after-e4-e5")));
+  });
 });
