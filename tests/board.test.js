@@ -1,8 +1,8 @@
 import { describe, test, expect } from "vitest";
-import { square, idOf, div } from "./support/board.js";
+import { square, idOf, div } from "./board.js";
 
 /*
- * Tests for the board fixtures in tests/support/board.js. Each expected value
+ * Tests for the board fixtures in tests/board.js. Each expected value
  * is written out in full, and the ids come from the site's sample files.
  */
 
