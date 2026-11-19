@@ -19,7 +19,7 @@ export function idOf(name) {
   return `${row}${col}`;
 }
 
-function div(className) {
+export function div(className) {
   const el = document.createElement("div");
   el.className = className;
   return el;

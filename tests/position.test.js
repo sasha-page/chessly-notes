@@ -1,10 +1,10 @@
 import { describe, test, expect } from "vitest";
 import { ChessNotesPosition } from "../src/position.js";
-import { makeBoard, pieceOn, idOf } from "./support/board.js";
+import { makeBoard, pieceOn, idOf } from "./board.js";
 
 /*
  * Integration tests for findBoards and readBoard in src/position.js, on
- * boards built by makeBoard (tests/support/board.js). The unit tests for the
+ * boards built by makeBoard (tests/board.js). The unit tests for the
  * helpers are in position.unit.test.js.
  */
 
