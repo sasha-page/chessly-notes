@@ -1,5 +1,6 @@
 import { describe, test, expect } from "vitest";
-import { square, idOf, div, makePiece } from "./board.js";
+import { square, idOf, div, makePiece, makeBoard } from "./board.js";
+import expectedBoardsHtml from "./expected_boards.html?raw";
 
 /*
  * Tests for the board fixtures in tests/board.js. Each expected value
@@ -99,5 +100,28 @@ describe("makePiece", () => {
       transform: "translate(400%, 300%)",
       content: '<div class="piece_piece__JbwmA"><img alt="p" class="piece_image__sXVkQ"></div>',
     });
+  });
+});
+
+describe("makeBoard", () => {
+  // Builds the boards in expected_boards.html, which were checked against the
+  // site's sample files. The site's own HTML has more than makeBoard builds,
+  // so the tests compare with these boards instead.
+
+  const expectedPage = new DOMParser().parseFromString(expectedBoardsHtml, "text/html");
+
+  /** HTML with one tag per line, so a failure shows which tags differ. */
+  function tagLines(html) {
+    return html.replace(/>\s*</g, ">\n<");
+  }
+
+  /** The board in the section with this id of expected_boards.html. */
+  function expectedBoard(sectionId) {
+    return expectedPage.querySelector(`#${sectionId} [class*="ChessBoard_relative"]`).outerHTML;
+  }
+
+  test("starting position, white at bottom", () => {
+    const board = makeBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", { orientation: "white" });
+    expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("starting-position")));
   });
 });
