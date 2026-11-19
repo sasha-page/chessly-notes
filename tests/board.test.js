@@ -170,4 +170,9 @@ describe("pieceOn", () => {
         '<div class="piece_piece__JbwmA"><img alt="P" class="piece_image__sXVkQ"></div></div>',
     );
   });
+
+  test('an empty board with a captured "p" on d4: "d4" → null', () => {
+    const board = makeBoard("8/8/8/8/8/8/8/8", { orientation: "white", captured: [{ letter: "p", on: "d4" }] });
+    expect(pieceOn(board, "d4")).toBe(null);
+  });
 });
