@@ -26,7 +26,7 @@ export function div(className) {
 }
 
 /** One piece wrapper, as the site draws it. */
-function makePiece(letter, { row, col }, orientation, removed = false) {
+export function makePiece(letter, { row, col }, orientation, removed = false) {
   // Seen from Black's side the board is rotated 180°.
   const screen = orientation === "black" ? { x: 7 - col, y: 7 - row } : { x: col, y: row };
   const wrapper = div("ChessBoard_pieceWrapper__m95pT" + (removed ? " ChessBoard_removed__kaYG3" : ""));
