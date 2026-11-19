@@ -120,6 +120,12 @@ describe("makeBoard", () => {
     return expectedPage.querySelector(`#${sectionId} [class*="ChessBoard_relative"]`).outerHTML;
   }
 
+  test("tagLines puts each tag on its own line, dropping the whitespace between tags", () => {
+    expect(tagLines('<div class="x"><span>5</span>\n    <img alt="q"></div>')).toBe(
+      '<div class="x">\n<span>5</span>\n<img alt="q">\n</div>',
+    );
+  });
+
   test("starting position, white at bottom", () => {
     const board = makeBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", { orientation: "white" });
     expect(tagLines(board.outerHTML)).toBe(tagLines(expectedBoard("starting-position")));
