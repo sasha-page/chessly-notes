@@ -83,4 +83,21 @@ describe("makePiece", () => {
       content: '<div class="piece_piece__JbwmA"><img alt="N" class="piece_image__sXVkQ"></div>',
     });
   });
+
+  test('a captured piece: "p" on row 4, col 3, Black at bottom → the captured black pawn in capture.html', () => {
+    const el = makePiece("p", { row: 4, col: 3 }, "black", true);
+    expect({
+      tag: el.tagName,
+      id: el.id,
+      className: el.className,
+      transform: el.style.transform,
+      content: el.innerHTML,
+    }).toStrictEqual({
+      tag: "DIV",
+      id: "43",
+      className: "ChessBoard_pieceWrapper__m95pT ChessBoard_removed__kaYG3",
+      transform: "translate(400%, 300%)",
+      content: '<div class="piece_piece__JbwmA"><img alt="p" class="piece_image__sXVkQ"></div>',
+    });
+  });
 });
