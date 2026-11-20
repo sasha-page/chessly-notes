@@ -346,6 +346,13 @@ describe("chooseOrientation", () => {
       reason: "the labels say Black is at the bottom but the ids say White",
     });
   });
+
+  test("labels null, ids null → can't tell", () => {
+    expect(internals.chooseOrientation(null, null)).toStrictEqual({
+      ok: false,
+      reason: "can't tell which way up the board is",
+    });
+  });
 });
 
 describe("parseScreenSquare", () => {
