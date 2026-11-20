@@ -299,6 +299,14 @@ describe("orientationFromIds", () => {
     ];
     expect(internals.orientationFromIds(pieces)).toBe(null);
   });
+
+  test("a piece with no id → null", () => {
+    const pieces = [
+      { idSquare: { row: 6, col: 2 }, screen: { row: 6, col: 2 } }, // c2, fits White
+      { idSquare: null, screen: { row: 3, col: 5 } },
+    ];
+    expect(internals.orientationFromIds(pieces)).toBe(null);
+  });
 });
 
 describe("chooseOrientation", () => {
