@@ -54,7 +54,7 @@ export const ChessNotesPosition = (() => {
     const labels = [...board.querySelectorAll(SELECTORS.rankLabel)];
     const ranks = labels.map((label) => label.textContent.trim()).join("");
     if (ranks === "87654321") return "white";
-    if (ranks.startsWith("1")) return "black";
+    if (ranks === "12345678") return "black";
     return null;
   }
 
