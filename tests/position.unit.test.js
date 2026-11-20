@@ -120,13 +120,19 @@ describe("findBoard", () => {
 });
 
 describe("orientationFromLabels", () => {
-  // Reads the top rank label.
+  // Reads all eight rank labels in order.
 
-  test('labels "8", "7" → "white"', () => {
+  test('labels "8" to "1", top to bottom → "white"', () => {
     const board = document.createElement("div");
     board.innerHTML = `
     <div class="ChessBoard_rankNumber__YLkVg">8</div>
-    <div class="ChessBoard_rankNumber__YLkVg">7</div>`;
+    <div class="ChessBoard_rankNumber__YLkVg">7</div>
+    <div class="ChessBoard_rankNumber__YLkVg">6</div>
+    <div class="ChessBoard_rankNumber__YLkVg">5</div>
+    <div class="ChessBoard_rankNumber__YLkVg">4</div>
+    <div class="ChessBoard_rankNumber__YLkVg">3</div>
+    <div class="ChessBoard_rankNumber__YLkVg">2</div>
+    <div class="ChessBoard_rankNumber__YLkVg">1</div>`;
     expect(internals.orientationFromLabels(board)).toBe("white");
   });
 
