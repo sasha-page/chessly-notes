@@ -4,7 +4,7 @@ import { ChessNotesPosition } from "../src/position.js";
 /*
  * Unit tests for findBoard and the helpers in src/position.js. Each test
  * writes its own input inline, only what the function reads. The
- * integration tests for readBoard are in position.test.js.
+ * integration tests for readBoard are in position.integration.test.js.
  */
 
 const { internals } = ChessNotesPosition;
