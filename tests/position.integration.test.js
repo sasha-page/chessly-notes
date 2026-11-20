@@ -87,13 +87,13 @@ describe("readBoard", () => {
     expect(read(board)).toStrictEqual(UNSURE);
   });
 
+  // Boards that can't be read.
+
   test("labels present: a piece whose id disagrees is caught by the id check", () => {
     const board = makeBoard(AFTER_E4_E5);
     pieceOn(board, "e4").id = idOf("d5");
     expect(read(board)).toStrictEqual({ ok: false, reason: "piece P is drawn on e4 but its id says d5" });
   });
-
-  // Boards that can't be read.
 
   test("a piece between squares is rejected", () => {
     const board = makeBoard(AFTER_E4_E5);
