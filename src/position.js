@@ -180,8 +180,9 @@ export const ChessNotesPosition = (() => {
 
     if (pieces.length === 0) return { ok: false, reason: "no pieces found" };
 
-    const orientation = orientationFromLabels(board) ?? orientationFromIds(pieces);
-    if (orientation === null) return { ok: false, reason: "can't tell which way up the board is" };
+    const chosen = chooseOrientation(orientationFromLabels(board), orientationFromIds(pieces));
+    if (!chosen.ok) return chosen;
+    const { orientation } = chosen;
 
     const grid = Array.from({ length: 8 }, () => Array(8).fill(null));
 
