@@ -339,6 +339,13 @@ describe("chooseOrientation", () => {
       reason: "the labels say White is at the bottom but the ids say Black",
     });
   });
+
+  test('labels "black", ids "white" → the labels and ids disagree', () => {
+    expect(internals.chooseOrientation("black", "white")).toStrictEqual({
+      ok: false,
+      reason: "the labels say Black is at the bottom but the ids say White",
+    });
+  });
 });
 
 describe("parseScreenSquare", () => {
