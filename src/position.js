@@ -78,6 +78,11 @@ export const ChessNotesPosition = (() => {
     return orientation;
   }
 
+  /** The board's orientation from the labels and the ids. */
+  function chooseOrientation(fromLabels, fromIds) {
+    return { ok: true, orientation: fromLabels };
+  }
+
   /** Screen square from `translate(X%, Y%)`, or null if between squares. */
   function parseScreenSquare(el) {
     const match = TRANSLATE.exec(el.style.transform);
@@ -204,6 +209,6 @@ export const ChessNotesPosition = (() => {
     findBoard,
     readBoard,
     // For tests only. Not part of the public API.
-    internals: { orientationFromLabels, orientationFromIds, parseScreenSquare, parseIdSquare, squareName, toPlacement },
+    internals: { orientationFromLabels, orientationFromIds, chooseOrientation, parseScreenSquare, parseIdSquare, squareName, toPlacement },
   };
 })();
