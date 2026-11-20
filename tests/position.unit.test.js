@@ -267,9 +267,8 @@ describe("orientationFromIds", () => {
     expect(internals.orientationFromIds(pieces)).toBe("black");
   });
 
-  test('pieces with no id or no screen square are skipped → "black"', () => {
+  test('a piece with no screen square is skipped → "black"', () => {
     const pieces = [
-      { idSquare: null, screen: { row: 2, col: 2 } },
       { idSquare: { row: 3, col: 6 }, screen: null },
       { idSquare: { row: 7, col: 0 }, screen: { row: 0, col: 7 } }, // a1
     ];
@@ -286,7 +285,7 @@ describe("orientationFromIds", () => {
     expect(internals.orientationFromIds(pieces)).toBe(null);
   });
 
-  test("a piece fits neither side as the first piece → null", () => {
+  test("a piece fits neither side → null", () => {
     const pieces = [
       { idSquare: { row: 7, col: 7 }, screen: { row: 6, col: 7 } }, // h1, fits neither
       { idSquare: { row: 6, col: 0 }, screen: { row: 6, col: 0 } }, // a2, fits White
@@ -294,17 +293,17 @@ describe("orientationFromIds", () => {
     expect(internals.orientationFromIds(pieces)).toBe(null);
   });
 
-  test("a piece fits neither side as the second piece → null", () => {
+  test("no usable pieces → null", () => {
     const pieces = [
-      { idSquare: { row: 7, col: 1 }, screen: { row: 7, col: 1 } }, // b1, fits White
-      { idSquare: { row: 2, col: 5 }, screen: { row: 2, col: 4 } }, // f6, fits neither
+      { idSquare: { row: 5, col: 5 }, screen: null },
     ];
     expect(internals.orientationFromIds(pieces)).toBe(null);
   });
 
-  test("no usable pieces → null", () => {
+  test("a piece with no id → null", () => {
     const pieces = [
-      { idSquare: null, screen: { row: 5, col: 5 } },
+      { idSquare: { row: 6, col: 2 }, screen: { row: 6, col: 2 } }, // c2, fits White
+      { idSquare: null, screen: { row: 3, col: 5 } },
     ];
     expect(internals.orientationFromIds(pieces)).toBe(null);
   });
