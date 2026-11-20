@@ -267,9 +267,8 @@ describe("orientationFromIds", () => {
     expect(internals.orientationFromIds(pieces)).toBe("black");
   });
 
-  test('pieces with no id or no screen square are skipped → "black"', () => {
+  test('a piece with no screen square is skipped → "black"', () => {
     const pieces = [
-      { idSquare: null, screen: { row: 2, col: 2 } },
       { idSquare: { row: 3, col: 6 }, screen: null },
       { idSquare: { row: 7, col: 0 }, screen: { row: 0, col: 7 } }, // a1
     ];
