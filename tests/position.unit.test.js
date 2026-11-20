@@ -330,6 +330,15 @@ describe("chooseOrientation", () => {
   test('ids only: labels null, ids "white" → "white"', () => {
     expect(internals.chooseOrientation(null, "white")).toStrictEqual({ ok: true, orientation: "white" });
   });
+
+  // Returns a reason when they disagree or neither gives one.
+
+  test('labels "white", ids "black" → the labels and ids disagree', () => {
+    expect(internals.chooseOrientation("white", "black")).toStrictEqual({
+      ok: false,
+      reason: "the labels say White is at the bottom but the ids say Black",
+    });
+  });
 });
 
 describe("parseScreenSquare", () => {
