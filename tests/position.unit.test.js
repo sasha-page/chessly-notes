@@ -109,6 +109,14 @@ describe("findBoard", () => {
     root.innerHTML = '<div class="Lesson_title__8kq2d">Openings</div>';
     expect(ChessNotesPosition.findBoard(root)).toStrictEqual({ ok: false, reason: "no board found" });
   });
+
+  test('two boards → { ok: false, reason: "found 2 boards" }', () => {
+    const root = document.createElement("div");
+    root.innerHTML =
+      '<div class="ChessBoard_relative__3gr96"></div>' +
+      '<div class="ChessBoard_relative__3gr96"></div>';
+    expect(ChessNotesPosition.findBoard(root)).toStrictEqual({ ok: false, reason: "found 2 boards" });
+  });
 });
 
 describe("orientationFromLabels", () => {
