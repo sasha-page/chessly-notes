@@ -120,32 +120,64 @@ describe("findBoard", () => {
 });
 
 describe("orientationFromLabels", () => {
-  // Reads the top rank label.
+  // Reads all eight rank labels in order.
 
-  test('labels "8", "7" → "white"', () => {
+  test('labels "8" to "1", top to bottom → "white"', () => {
     const board = document.createElement("div");
     board.innerHTML = `
     <div class="ChessBoard_rankNumber__YLkVg">8</div>
-    <div class="ChessBoard_rankNumber__YLkVg">7</div>`;
+    <div class="ChessBoard_rankNumber__YLkVg">7</div>
+    <div class="ChessBoard_rankNumber__YLkVg">6</div>
+    <div class="ChessBoard_rankNumber__YLkVg">5</div>
+    <div class="ChessBoard_rankNumber__YLkVg">4</div>
+    <div class="ChessBoard_rankNumber__YLkVg">3</div>
+    <div class="ChessBoard_rankNumber__YLkVg">2</div>
+    <div class="ChessBoard_rankNumber__YLkVg">1</div>`;
     expect(internals.orientationFromLabels(board)).toBe("white");
   });
 
-  test('labels "1", "2" → "black"', () => {
+  test('labels "1" to "8", top to bottom → "black"', () => {
     const board = document.createElement("div");
     board.innerHTML = `
     <div class="ChessBoard_rankNumber__YLkVg">1</div>
-    <div class="ChessBoard_rankNumber__YLkVg">2</div>`;
+    <div class="ChessBoard_rankNumber__YLkVg">2</div>
+    <div class="ChessBoard_rankNumber__YLkVg">3</div>
+    <div class="ChessBoard_rankNumber__YLkVg">4</div>
+    <div class="ChessBoard_rankNumber__YLkVg">5</div>
+    <div class="ChessBoard_rankNumber__YLkVg">6</div>
+    <div class="ChessBoard_rankNumber__YLkVg">7</div>
+    <div class="ChessBoard_rankNumber__YLkVg">8</div>`;
     expect(internals.orientationFromLabels(board)).toBe("black");
   });
 
-  test('whitespace around the label is ignored ("\\n    8\\n  ", "7" → "white")', () => {
+  test('whitespace around the labels is ignored ("\\n    8\\n  " to "\\n    1\\n  " → "white")', () => {
     const board = document.createElement("div");
-    // Laid out like the real page, with the number on its own line.
+    // Laid out like the real page, with each number on its own line.
     board.innerHTML = `
     <div class="ChessBoard_rankNumber__YLkVg">
     8
   </div>
-    <div class="ChessBoard_rankNumber__YLkVg">7</div>`;
+    <div class="ChessBoard_rankNumber__YLkVg">
+    7
+  </div>
+    <div class="ChessBoard_rankNumber__YLkVg">
+    6
+  </div>
+    <div class="ChessBoard_rankNumber__YLkVg">
+    5
+  </div>
+    <div class="ChessBoard_rankNumber__YLkVg">
+    4
+  </div>
+    <div class="ChessBoard_rankNumber__YLkVg">
+    3
+  </div>
+    <div class="ChessBoard_rankNumber__YLkVg">
+    2
+  </div>
+    <div class="ChessBoard_rankNumber__YLkVg">
+    1
+  </div>`;
     expect(internals.orientationFromLabels(board)).toBe("white");
   });
 
@@ -156,10 +188,58 @@ describe("orientationFromLabels", () => {
     expect(internals.orientationFromLabels(board)).toBe(null);
   });
 
-  test('top label is not "8" or "1" ("4", "8" → null)', () => {
+  test('top label "8" but the rest out of order ("8", "7", "6", "4", "5", "3", "2", "1" → null)', () => {
     const board = document.createElement("div");
     board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">8</div>
+    <div class="ChessBoard_rankNumber__YLkVg">7</div>
+    <div class="ChessBoard_rankNumber__YLkVg">6</div>
     <div class="ChessBoard_rankNumber__YLkVg">4</div>
+    <div class="ChessBoard_rankNumber__YLkVg">5</div>
+    <div class="ChessBoard_rankNumber__YLkVg">3</div>
+    <div class="ChessBoard_rankNumber__YLkVg">2</div>
+    <div class="ChessBoard_rankNumber__YLkVg">1</div>`;
+    expect(internals.orientationFromLabels(board)).toBe(null);
+  });
+
+  test('top label "1" but the rest out of order ("1", "2", "3", "4", "5", "6", "8", "7" → null)', () => {
+    const board = document.createElement("div");
+    board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">1</div>
+    <div class="ChessBoard_rankNumber__YLkVg">2</div>
+    <div class="ChessBoard_rankNumber__YLkVg">3</div>
+    <div class="ChessBoard_rankNumber__YLkVg">4</div>
+    <div class="ChessBoard_rankNumber__YLkVg">5</div>
+    <div class="ChessBoard_rankNumber__YLkVg">6</div>
+    <div class="ChessBoard_rankNumber__YLkVg">8</div>
+    <div class="ChessBoard_rankNumber__YLkVg">7</div>`;
+    expect(internals.orientationFromLabels(board)).toBe(null);
+  });
+
+  test('fewer than eight labels ("8" to "2" → null)', () => {
+    const board = document.createElement("div");
+    board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">8</div>
+    <div class="ChessBoard_rankNumber__YLkVg">7</div>
+    <div class="ChessBoard_rankNumber__YLkVg">6</div>
+    <div class="ChessBoard_rankNumber__YLkVg">5</div>
+    <div class="ChessBoard_rankNumber__YLkVg">4</div>
+    <div class="ChessBoard_rankNumber__YLkVg">3</div>
+    <div class="ChessBoard_rankNumber__YLkVg">2</div>`;
+    expect(internals.orientationFromLabels(board)).toBe(null);
+  });
+
+  test('more than eight labels ("1" to "8", then "8" again → null)', () => {
+    const board = document.createElement("div");
+    board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">1</div>
+    <div class="ChessBoard_rankNumber__YLkVg">2</div>
+    <div class="ChessBoard_rankNumber__YLkVg">3</div>
+    <div class="ChessBoard_rankNumber__YLkVg">4</div>
+    <div class="ChessBoard_rankNumber__YLkVg">5</div>
+    <div class="ChessBoard_rankNumber__YLkVg">6</div>
+    <div class="ChessBoard_rankNumber__YLkVg">7</div>
+    <div class="ChessBoard_rankNumber__YLkVg">8</div>
     <div class="ChessBoard_rankNumber__YLkVg">8</div>`;
     expect(internals.orientationFromLabels(board)).toBe(null);
   });
