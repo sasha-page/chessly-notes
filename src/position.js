@@ -33,11 +33,15 @@ export const ChessNotesPosition = (() => {
   const PIECE_LETTERS = new Set("prnbqkPRNBQK");
   const TRANSLATE = /translate\(\s*(-?[\d.]+)%\s*,\s*(-?[\d.]+)%\s*\)/;
 
-  /** The board container on the page. */
+  /**
+   * The board container on the page, or a reason if there isn't exactly one.
+   * Never throws.
+   */
   function findBoard(root = document) {
-    const board = root.querySelector(SELECTORS.board);
-    if (!board) return { ok: false, reason: "no board found" };
-    return { ok: true, board };
+    const boards = root.querySelectorAll(SELECTORS.board);
+    if (boards.length === 0) return { ok: false, reason: "no board found" };
+    if (boards.length > 1) return { ok: false, reason: `found ${boards.length} boards` };
+    return { ok: true, board: boards[0] };
   }
 
   /**
