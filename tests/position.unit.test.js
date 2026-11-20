@@ -103,6 +103,12 @@ describe("findBoard", () => {
     const board = root.querySelector("div");
     expect(ChessNotesPosition.findBoard(root)).toStrictEqual({ ok: true, board });
   });
+
+  test('no board → { ok: false, reason: "no board found" }', () => {
+    const root = document.createElement("div");
+    root.innerHTML = '<div class="Lesson_title__8kq2d">Openings</div>';
+    expect(ChessNotesPosition.findBoard(root)).toStrictEqual({ ok: false, reason: "no board found" });
+  });
 });
 
 describe("orientationFromLabels", () => {
