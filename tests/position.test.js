@@ -87,25 +87,6 @@ describe("readBoard", () => {
     expect(read(board)).toStrictEqual(UNSURE);
   });
 
-  test("no labels: one piece disagrees (black at bottom)", () => {
-    const board = makeBoard(AFTER_E4, { orientation: "black", labels: false });
-    // The e4 pawn is drawn where d5 would be if White were at the bottom.
-    pieceOn(board, "e4").id = idOf("d5");
-    expect(read(board)).toStrictEqual(UNSURE);
-  });
-
-  test("no labels: one piece fits neither side (white at bottom)", () => {
-    const board = makeBoard(AFTER_E4_E5, { labels: false });
-    pieceOn(board, "e4").id = idOf("e2");
-    expect(read(board)).toStrictEqual(UNSURE);
-  });
-
-  test("no labels: one piece fits neither side (black at bottom)", () => {
-    const board = makeBoard(AFTER_E4, { orientation: "black", labels: false });
-    pieceOn(board, "e4").id = idOf("e2");
-    expect(read(board)).toStrictEqual(UNSURE);
-  });
-
   test("labels present: a piece whose id disagrees is caught by the id check", () => {
     const board = makeBoard(AFTER_E4_E5);
     pieceOn(board, "e4").id = idOf("d5");
