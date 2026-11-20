@@ -66,7 +66,8 @@ export const ChessNotesPosition = (() => {
   function orientationFromIds(pieces) {
     let orientation = null;
     for (const p of pieces) {
-      if (!p.idSquare || !p.screen) continue;
+      if (!p.idSquare) return null;
+      if (!p.screen) continue;
       const fromWhite = p.idSquare.row === p.screen.row && p.idSquare.col === p.screen.col;
       // Seen from Black's side the board is rotated 180°.
       const fromBlack = p.idSquare.row === 7 - p.screen.row && p.idSquare.col === 7 - p.screen.col;
