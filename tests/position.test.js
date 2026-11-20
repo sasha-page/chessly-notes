@@ -48,6 +48,14 @@ describe("readBoard", () => {
     });
   });
 
+  test("labels say black at bottom and no piece has an id", () => {
+    const board = makeBoard(AFTER_CAPTURES, { orientation: "black" });
+    for (const piece of board.querySelectorAll('[class*="ChessBoard_pieceWrapper"]')) {
+      piece.removeAttribute("id");
+    }
+    expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_CAPTURES, orientation: "black" });
+  });
+
   test("captured pieces are skipped", () => {
     const board = makeBoard(AFTER_CAPTURES, { orientation: "black", captured: CAPTURED_ON_D4 });
     expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_CAPTURES, orientation: "black" });
