@@ -2,9 +2,9 @@ import { describe, test, expect } from "vitest";
 import { ChessNotesPosition } from "../src/position.js";
 
 /*
- * Unit tests for the helpers in src/position.js. Each test writes its own
- * input inline, only what the helper reads. The integration tests for
- * findBoards and readBoard are in position.test.js.
+ * Unit tests for findBoard and the helpers in src/position.js. Each test
+ * writes its own input inline, only what the function reads. The
+ * integration tests for readBoard are in position.test.js.
  */
 
 const { internals } = ChessNotesPosition;
@@ -91,6 +91,17 @@ describe("grid", () => {
       [_, _, _, _, _, _, _, _],
       [_, "K", _, _, _, _, _, _],
     ]);
+  });
+});
+
+describe("findBoard", () => {
+  // Returns the board only when there is exactly one.
+
+  test("one board → { ok: true, board } with that board", () => {
+    const root = document.createElement("div");
+    root.innerHTML = '<p>Your move</p><div class="ChessBoard_relative__3gr96"></div>';
+    const board = root.querySelector("div");
+    expect(ChessNotesPosition.findBoard(root)).toStrictEqual({ ok: true, board });
   });
 });
 
