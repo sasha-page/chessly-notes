@@ -188,11 +188,17 @@ describe("orientationFromLabels", () => {
     expect(internals.orientationFromLabels(board)).toBe(null);
   });
 
-  test('top label is not "8" or "1" ("4", "8" → null)', () => {
+  test('top label "8" but the rest out of order ("8", "7", "6", "4", "5", "3", "2", "1" → null)', () => {
     const board = document.createElement("div");
     board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">8</div>
+    <div class="ChessBoard_rankNumber__YLkVg">7</div>
+    <div class="ChessBoard_rankNumber__YLkVg">6</div>
     <div class="ChessBoard_rankNumber__YLkVg">4</div>
-    <div class="ChessBoard_rankNumber__YLkVg">8</div>`;
+    <div class="ChessBoard_rankNumber__YLkVg">5</div>
+    <div class="ChessBoard_rankNumber__YLkVg">3</div>
+    <div class="ChessBoard_rankNumber__YLkVg">2</div>
+    <div class="ChessBoard_rankNumber__YLkVg">1</div>`;
     expect(internals.orientationFromLabels(board)).toBe(null);
   });
 });
