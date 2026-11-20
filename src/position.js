@@ -35,7 +35,9 @@ export const ChessNotesPosition = (() => {
 
   /** The board container on the page. */
   function findBoard(root = document) {
-    return { ok: true, board: root.querySelector(SELECTORS.board) };
+    const board = root.querySelector(SELECTORS.board);
+    if (!board) return { ok: false, reason: "no board found" };
+    return { ok: true, board };
   }
 
   /**
