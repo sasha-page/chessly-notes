@@ -326,6 +326,10 @@ describe("chooseOrientation", () => {
   test('labels only: labels "black", ids null → "black"', () => {
     expect(internals.chooseOrientation("black", null)).toStrictEqual({ ok: true, orientation: "black" });
   });
+
+  test('ids only: labels null, ids "white" → "white"', () => {
+    expect(internals.chooseOrientation(null, "white")).toStrictEqual({ ok: true, orientation: "white" });
+  });
 });
 
 describe("parseScreenSquare", () => {
