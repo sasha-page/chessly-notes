@@ -98,7 +98,7 @@ export const ChessNotesPosition = (() => {
     return { ok: true, orientation };
   }
 
-  /** Screen square from `translate(X%, Y%)`, or null if between squares. */
+  /** Screen square from `translate(X%, Y%)`, or null if the piece isn't on a square. */
   function parseScreenSquare(el) {
     const match = TRANSLATE.exec(el.style.transform);
     if (!match) return null;
