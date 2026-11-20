@@ -336,14 +336,14 @@ describe("chooseOrientation", () => {
   test('labels "white", ids "black" → the labels and ids disagree', () => {
     expect(internals.chooseOrientation("white", "black")).toStrictEqual({
       ok: false,
-      reason: "the labels say White is at the bottom but the ids say Black",
+      reason: "the labels say white is at the bottom but the ids say black",
     });
   });
 
   test('labels "black", ids "white" → the labels and ids disagree', () => {
     expect(internals.chooseOrientation("black", "white")).toStrictEqual({
       ok: false,
-      reason: "the labels say Black is at the bottom but the ids say White",
+      reason: "the labels say black is at the bottom but the ids say white",
     });
   });
 

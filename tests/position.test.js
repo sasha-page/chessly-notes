@@ -44,7 +44,7 @@ describe("readBoard", () => {
     labels.forEach((label, i) => (label.textContent = String(i + 1)));
     expect(read(board)).toStrictEqual({
       ok: false,
-      reason: "the labels say Black is at the bottom but the ids say White",
+      reason: "the labels say black is at the bottom but the ids say white",
     });
   });
 
