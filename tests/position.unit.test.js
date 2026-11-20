@@ -201,6 +201,20 @@ describe("orientationFromLabels", () => {
     <div class="ChessBoard_rankNumber__YLkVg">1</div>`;
     expect(internals.orientationFromLabels(board)).toBe(null);
   });
+
+  test('top label "1" but the rest out of order ("1", "2", "3", "4", "5", "6", "8", "7" → null)', () => {
+    const board = document.createElement("div");
+    board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">1</div>
+    <div class="ChessBoard_rankNumber__YLkVg">2</div>
+    <div class="ChessBoard_rankNumber__YLkVg">3</div>
+    <div class="ChessBoard_rankNumber__YLkVg">4</div>
+    <div class="ChessBoard_rankNumber__YLkVg">5</div>
+    <div class="ChessBoard_rankNumber__YLkVg">6</div>
+    <div class="ChessBoard_rankNumber__YLkVg">8</div>
+    <div class="ChessBoard_rankNumber__YLkVg">7</div>`;
+    expect(internals.orientationFromLabels(board)).toBe(null);
+  });
 });
 
 describe("orientationFromIds", () => {
