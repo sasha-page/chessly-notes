@@ -310,6 +310,51 @@ describe("orientationFromIds", () => {
   });
 });
 
+describe("chooseOrientation", () => {
+  // Takes the orientation from the labels and from the ids, in that order.
+
+  // Returns the orientation when the labels and ids agree, or when only one gives one.
+
+  test('labels "white", ids "white" → "white"', () => {
+    expect(internals.chooseOrientation("white", "white")).toStrictEqual({ ok: true, orientation: "white" });
+  });
+
+  test('labels "black", ids "black" → "black"', () => {
+    expect(internals.chooseOrientation("black", "black")).toStrictEqual({ ok: true, orientation: "black" });
+  });
+
+  test('labels only: labels "black", ids null → "black"', () => {
+    expect(internals.chooseOrientation("black", null)).toStrictEqual({ ok: true, orientation: "black" });
+  });
+
+  test('ids only: labels null, ids "white" → "white"', () => {
+    expect(internals.chooseOrientation(null, "white")).toStrictEqual({ ok: true, orientation: "white" });
+  });
+
+  // Returns a reason when they disagree or neither gives one.
+
+  test('labels "white", ids "black" → the labels and ids disagree', () => {
+    expect(internals.chooseOrientation("white", "black")).toStrictEqual({
+      ok: false,
+      reason: "the labels say white is at the bottom but the ids say black",
+    });
+  });
+
+  test('labels "black", ids "white" → the labels and ids disagree', () => {
+    expect(internals.chooseOrientation("black", "white")).toStrictEqual({
+      ok: false,
+      reason: "the labels say black is at the bottom but the ids say white",
+    });
+  });
+
+  test("labels null, ids null → can't tell", () => {
+    expect(internals.chooseOrientation(null, null)).toStrictEqual({
+      ok: false,
+      reason: "can't tell which way up the board is",
+    });
+  });
+});
+
 describe("parseScreenSquare", () => {
   // Reads a square from the transform.
 

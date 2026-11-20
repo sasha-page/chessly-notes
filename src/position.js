@@ -78,6 +78,24 @@ export const ChessNotesPosition = (() => {
     return orientation;
   }
 
+  /**
+   * The board's orientation from the labels and the ids, each "white",
+   * "black" or null. When both give one they must match; when only one
+   * does, that one is used. Returns { ok: true, orientation } or
+   * { ok: false, reason }.
+   */
+  function chooseOrientation(fromLabels, fromIds) {
+    if (fromLabels && fromIds && fromLabels !== fromIds) {
+      return {
+        ok: false,
+        reason: `the labels say ${fromLabels} is at the bottom but the ids say ${fromIds}`,
+      };
+    }
+    const orientation = fromLabels ?? fromIds;
+    if (orientation === null) return { ok: false, reason: "can't tell which way up the board is" };
+    return { ok: true, orientation };
+  }
+
   /** Screen square from `translate(X%, Y%)`, or null if between squares. */
   function parseScreenSquare(el) {
     const match = TRANSLATE.exec(el.style.transform);
@@ -166,8 +184,9 @@ export const ChessNotesPosition = (() => {
 
     if (pieces.length === 0) return { ok: false, reason: "no pieces found" };
 
-    const orientation = orientationFromLabels(board) ?? orientationFromIds(pieces);
-    if (orientation === null) return { ok: false, reason: "can't tell which way up the board is" };
+    const chosen = chooseOrientation(orientationFromLabels(board), orientationFromIds(pieces));
+    if (!chosen.ok) return chosen;
+    const { orientation } = chosen;
 
     const grid = Array.from({ length: 8 }, () => Array(8).fill(null));
 
@@ -204,6 +223,6 @@ export const ChessNotesPosition = (() => {
     findBoard,
     readBoard,
     // For tests only. Not part of the public API.
-    internals: { orientationFromLabels, orientationFromIds, parseScreenSquare, parseIdSquare, squareName, toPlacement },
+    internals: { orientationFromLabels, orientationFromIds, chooseOrientation, parseScreenSquare, parseIdSquare, squareName, toPlacement },
   };
 })();

@@ -36,6 +36,26 @@ describe("readBoard", () => {
     expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_E4, orientation: "black" });
   });
 
+  // The labels and ids must agree when both give an orientation.
+
+  test("labels say black at bottom but every id fits white at bottom", () => {
+    const board = makeBoard(AFTER_E4_E5);
+    const labels = board.querySelectorAll('[class*="ChessBoard_rankNumber"]');
+    labels.forEach((label, i) => (label.textContent = String(i + 1)));
+    expect(read(board)).toStrictEqual({
+      ok: false,
+      reason: "the labels say black is at the bottom but the ids say white",
+    });
+  });
+
+  test("labels say black at bottom and no piece has an id", () => {
+    const board = makeBoard(AFTER_CAPTURES, { orientation: "black" });
+    for (const piece of board.querySelectorAll('[class*="ChessBoard_pieceWrapper"]')) {
+      piece.removeAttribute("id");
+    }
+    expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_CAPTURES, orientation: "black" });
+  });
+
   test("captured pieces are skipped", () => {
     const board = makeBoard(AFTER_CAPTURES, { orientation: "black", captured: CAPTURED_ON_D4 });
     expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_CAPTURES, orientation: "black" });
