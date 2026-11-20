@@ -33,9 +33,9 @@ export const ChessNotesPosition = (() => {
   const PIECE_LETTERS = new Set("prnbqkPRNBQK");
   const TRANSLATE = /translate\(\s*(-?[\d.]+)%\s*,\s*(-?[\d.]+)%\s*\)/;
 
-  /** Every board container on the page (normally just one). */
-  function findBoards(root = document) {
-    return [...root.querySelectorAll(SELECTORS.board)];
+  /** The board container on the page. */
+  function findBoard(root = document) {
+    return { ok: true, board: root.querySelector(SELECTORS.board) };
   }
 
   /**
@@ -195,7 +195,7 @@ export const ChessNotesPosition = (() => {
   }
 
   return {
-    findBoards,
+    findBoard,
     readBoard,
     // For tests only. Not part of the public API.
     internals: { orientationFromLabels, orientationFromIds, parseScreenSquare, parseIdSquare, squareName, toPlacement },
