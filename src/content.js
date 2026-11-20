@@ -25,16 +25,13 @@ import { ChessNotesPosition } from "./position.js";
   }
 
   function readNow() {
-    const boards = ChessNotesPosition.findBoards();
-    if (boards.length === 0) {
+    const found = ChessNotesPosition.findBoard();
+    if (!found.ok) {
       lastPlacement = null;
       return;
     }
-    if (boards.length > 1) {
-      console.warn(LOG_PREFIX, `found ${boards.length} boards; reading the first one`);
-    }
 
-    const result = ChessNotesPosition.readBoard(boards[0]);
+    const result = ChessNotesPosition.readBoard(found.board);
 
     if (!result.ok) {
       if (retries < MAX_RETRIES) {

@@ -3,9 +3,9 @@ import { ChessNotesPosition } from "../src/position.js";
 import { makeBoard, pieceOn, idOf } from "./board.js";
 
 /*
- * Integration tests for findBoards and readBoard in src/position.js, on
- * boards built by makeBoard (tests/board.js). The unit tests for the
- * helpers are in position.unit.test.js.
+ * Integration tests for readBoard in src/position.js, on boards built by
+ * makeBoard (tests/board.js). The unit tests for findBoard and the helpers
+ * are in position.unit.test.js.
  */
 
 const read = (board) => ChessNotesPosition.readBoard(board);
@@ -21,14 +21,6 @@ const AFTER_CAPTURES = "r1bqkbnr/pp2pppp/2n5/3pP3/3P4/5N2/PP3PPP/RNBQKB1R";
 const CAPTURED_ON_D4 = [{ letter: "P", on: "d4" }, { letter: "p", on: "d4" }];
 
 const UNSURE = { ok: false, reason: "can't tell which way up the board is" };
-
-describe("findBoards", () => {
-  test("finds the board container", () => {
-    const board = makeBoard(START);
-    const found = ChessNotesPosition.findBoards(document.body);
-    expect(found.includes(board)).toBe(true);
-  });
-});
 
 describe("readBoard", () => {
   test("starting position, white at bottom", () => {

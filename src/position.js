@@ -33,9 +33,15 @@ export const ChessNotesPosition = (() => {
   const PIECE_LETTERS = new Set("prnbqkPRNBQK");
   const TRANSLATE = /translate\(\s*(-?[\d.]+)%\s*,\s*(-?[\d.]+)%\s*\)/;
 
-  /** Every board container on the page (normally just one). */
-  function findBoards(root = document) {
-    return [...root.querySelectorAll(SELECTORS.board)];
+  /**
+   * The board container on the page, or a reason if there isn't exactly one.
+   * Never throws.
+   */
+  function findBoard(root = document) {
+    const boards = root.querySelectorAll(SELECTORS.board);
+    if (boards.length === 0) return { ok: false, reason: "no board found" };
+    if (boards.length > 1) return { ok: false, reason: `found ${boards.length} boards` };
+    return { ok: true, board: boards[0] };
   }
 
   /**
@@ -195,7 +201,7 @@ export const ChessNotesPosition = (() => {
   }
 
   return {
-    findBoards,
+    findBoard,
     readBoard,
     // For tests only. Not part of the public API.
     internals: { orientationFromLabels, orientationFromIds, parseScreenSquare, parseIdSquare, squareName, toPlacement },
