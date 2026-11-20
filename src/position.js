@@ -87,7 +87,9 @@ export const ChessNotesPosition = (() => {
         reason: `the labels say ${side[fromLabels]} is at the bottom but the ids say ${side[fromIds]}`,
       };
     }
-    return { ok: true, orientation: fromLabels ?? fromIds };
+    const orientation = fromLabels ?? fromIds;
+    if (orientation === null) return { ok: false, reason: "can't tell which way up the board is" };
+    return { ok: true, orientation };
   }
 
   /** Screen square from `translate(X%, Y%)`, or null if between squares. */
