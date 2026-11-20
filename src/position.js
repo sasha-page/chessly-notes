@@ -59,9 +59,10 @@ export const ChessNotesPosition = (() => {
   }
 
   /**
-   * Fallback if the labels are hidden: work out the orientation from the ids.
-   * Every piece must agree. If any piece's id doesn't match its on-screen
-   * square from either side, or two pieces disagree, return null.
+   * The board's orientation from the ids. Every piece must have an id, and
+   * every piece must agree. If a piece has no id, a piece's id doesn't match
+   * its on-screen square from either side, or two pieces disagree, return
+   * null. Pieces with no on-screen square are skipped.
    */
   function orientationFromIds(pieces) {
     let orientation = null;
