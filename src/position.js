@@ -46,9 +46,9 @@ export const ChessNotesPosition = (() => {
 
   /**
    * The board's orientation, i.e. which side is at the bottom ("white" or
-   * "black"), from the rank labels down the side: "8" at the top means
-   * White is at the bottom, "1" at the top means Black is.
-   * Returns null if there are no labels to go by.
+   * "black"), from the rank labels down the side: "8" to "1" from top to
+   * bottom means White is at the bottom, "1" to "8" means Black is.
+   * Returns null unless all eight labels are there and in one of those orders.
    */
   function orientationFromLabels(board) {
     const labels = [...board.querySelectorAll(SELECTORS.rankLabel)];
