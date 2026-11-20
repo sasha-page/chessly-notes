@@ -23,99 +23,105 @@ const CAPTURED_ON_D4 = [{ letter: "P", on: "d4" }, { letter: "p", on: "d4" }];
 const UNSURE = { ok: false, reason: "can't tell which way up the board is" };
 
 describe("readBoard", () => {
-  test("starting position, white at bottom", () => {
-    expect(read(makeBoard(START))).toStrictEqual({ ok: true, placement: START, orientation: "white" });
-  });
+  describe("labels and ids agree", () => {
+    test("starting position, white at bottom", () => {
+      expect(read(makeBoard(START))).toStrictEqual({ ok: true, placement: START, orientation: "white" });
+    });
 
-  test("after 1.e4 e5, white at bottom", () => {
-    expect(read(makeBoard(AFTER_E4_E5))).toStrictEqual({ ok: true, placement: AFTER_E4_E5, orientation: "white" });
-  });
+    test("after 1.e4 e5, white at bottom", () => {
+      expect(read(makeBoard(AFTER_E4_E5))).toStrictEqual({ ok: true, placement: AFTER_E4_E5, orientation: "white" });
+    });
 
-  test("after 1.e4, black at bottom", () => {
-    const board = makeBoard(AFTER_E4, { orientation: "black" });
-    expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_E4, orientation: "black" });
-  });
-
-  // The labels and ids must agree when both give an orientation.
-
-  test("labels say black at bottom but every id fits white at bottom", () => {
-    const board = makeBoard(AFTER_E4_E5);
-    const labels = board.querySelectorAll('[class*="ChessBoard_rankNumber"]');
-    labels.forEach((label, i) => (label.textContent = String(i + 1)));
-    expect(read(board)).toStrictEqual({
-      ok: false,
-      reason: "the labels say black is at the bottom but the ids say white",
+    test("after 1.e4, black at bottom", () => {
+      const board = makeBoard(AFTER_E4, { orientation: "black" });
+      expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_E4, orientation: "black" });
     });
   });
 
-  test("labels say black at bottom and no piece has an id", () => {
-    const board = makeBoard(AFTER_CAPTURES, { orientation: "black" });
-    for (const piece of board.querySelectorAll('[class*="ChessBoard_pieceWrapper"]')) {
-      piece.removeAttribute("id");
-    }
-    expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_CAPTURES, orientation: "black" });
+  describe("only the labels give an orientation", () => {
+    test("labels say black at bottom and no piece has an id", () => {
+      const board = makeBoard(AFTER_CAPTURES, { orientation: "black" });
+      for (const piece of board.querySelectorAll('[class*="ChessBoard_pieceWrapper"]')) {
+        piece.removeAttribute("id");
+      }
+      expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_CAPTURES, orientation: "black" });
+    });
   });
 
-  test("captured pieces are skipped", () => {
-    const board = makeBoard(AFTER_CAPTURES, { orientation: "black", captured: CAPTURED_ON_D4 });
-    expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_CAPTURES, orientation: "black" });
+  describe("only the ids give an orientation", () => {
+    test("no labels: after 1.e4 e5, white at bottom", () => {
+      const board = makeBoard(AFTER_E4_E5, { labels: false });
+      expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_E4_E5, orientation: "white" });
+    });
+
+    test("no labels: after 1.e4, black at bottom", () => {
+      const board = makeBoard(AFTER_E4, { orientation: "black", labels: false });
+      expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_E4, orientation: "black" });
+    });
   });
 
-  // Rank labels hidden: orientation has to come from the ids.
-
-  test("no labels: after 1.e4 e5, white at bottom", () => {
-    const board = makeBoard(AFTER_E4_E5, { labels: false });
-    expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_E4_E5, orientation: "white" });
+  describe("labels and ids disagree", () => {
+    test("labels say black at bottom but every id fits white at bottom", () => {
+      const board = makeBoard(AFTER_E4_E5);
+      const labels = board.querySelectorAll('[class*="ChessBoard_rankNumber"]');
+      labels.forEach((label, i) => (label.textContent = String(i + 1)));
+      expect(read(board)).toStrictEqual({
+        ok: false,
+        reason: "the labels say black is at the bottom but the ids say white",
+      });
+    });
   });
 
-  test("no labels: after 1.e4, black at bottom", () => {
-    const board = makeBoard(AFTER_E4, { orientation: "black", labels: false });
-    expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_E4, orientation: "black" });
+  describe("neither gives an orientation", () => {
+    test("no labels: one piece disagrees (white at bottom)", () => {
+      const board = makeBoard(AFTER_E4_E5, { labels: false });
+      // The e4 pawn is drawn where d5 would be if Black were at the bottom.
+      pieceOn(board, "e4").id = idOf("d5");
+      expect(read(board)).toStrictEqual(UNSURE);
+    });
   });
 
-  test("no labels: captured pieces are skipped", () => {
-    const board = makeBoard(AFTER_CAPTURES, { orientation: "black", labels: false, captured: CAPTURED_ON_D4 });
-    expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_CAPTURES, orientation: "black" });
+  describe("captured pieces", () => {
+    test("captured pieces are skipped", () => {
+      const board = makeBoard(AFTER_CAPTURES, { orientation: "black", captured: CAPTURED_ON_D4 });
+      expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_CAPTURES, orientation: "black" });
+    });
+
+    test("no labels: captured pieces are skipped", () => {
+      const board = makeBoard(AFTER_CAPTURES, { orientation: "black", labels: false, captured: CAPTURED_ON_D4 });
+      expect(read(board)).toStrictEqual({ ok: true, placement: AFTER_CAPTURES, orientation: "black" });
+    });
   });
 
-  // Every piece must agree on the orientation.
+  describe("boards it can't read", () => {
+    test("labels present: a piece whose id disagrees is caught by the id check", () => {
+      const board = makeBoard(AFTER_E4_E5);
+      pieceOn(board, "e4").id = idOf("d5");
+      expect(read(board)).toStrictEqual({ ok: false, reason: "piece P is drawn on e4 but its id says d5" });
+    });
 
-  test("no labels: one piece disagrees (white at bottom)", () => {
-    const board = makeBoard(AFTER_E4_E5, { labels: false });
-    // The e4 pawn is drawn where d5 would be if Black were at the bottom.
-    pieceOn(board, "e4").id = idOf("d5");
-    expect(read(board)).toStrictEqual(UNSURE);
-  });
+    test("a piece between squares is rejected", () => {
+      const board = makeBoard(AFTER_E4_E5);
+      pieceOn(board, "e4").style.transform = "translate(400%, 450%)";
+      expect(read(board)).toStrictEqual({ ok: false, reason: "piece P is between squares (translate(400%, 450%))" });
+    });
 
-  test("labels present: a piece whose id disagrees is caught by the id check", () => {
-    const board = makeBoard(AFTER_E4_E5);
-    pieceOn(board, "e4").id = idOf("d5");
-    expect(read(board)).toStrictEqual({ ok: false, reason: "piece P is drawn on e4 but its id says d5" });
-  });
+    test("two pieces on one square are rejected", () => {
+      const board = makeBoard(AFTER_E4_E5);
+      const blackPawn = pieceOn(board, "e5");
+      blackPawn.removeAttribute("id");
+      blackPawn.style.transform = "translate(400%, 400%)"; // drawn on e4
+      expect(read(board)).toStrictEqual({ ok: false, reason: "two pieces on e4" });
+    });
 
-  // Boards that can't be read.
+    test("an empty board is rejected", () => {
+      expect(read(makeBoard("8/8/8/8/8/8/8/8"))).toStrictEqual({ ok: false, reason: "no pieces found" });
+    });
 
-  test("a piece between squares is rejected", () => {
-    const board = makeBoard(AFTER_E4_E5);
-    pieceOn(board, "e4").style.transform = "translate(400%, 450%)";
-    expect(read(board)).toStrictEqual({ ok: false, reason: "piece P is between squares (translate(400%, 450%))" });
-  });
-
-  test("two pieces on one square are rejected", () => {
-    const board = makeBoard(AFTER_E4_E5);
-    const blackPawn = pieceOn(board, "e5");
-    blackPawn.removeAttribute("id");
-    blackPawn.style.transform = "translate(400%, 400%)"; // drawn on e4
-    expect(read(board)).toStrictEqual({ ok: false, reason: "two pieces on e4" });
-  });
-
-  test("an empty board is rejected", () => {
-    expect(read(makeBoard("8/8/8/8/8/8/8/8"))).toStrictEqual({ ok: false, reason: "no pieces found" });
-  });
-
-  test("an unknown piece letter is rejected", () => {
-    const board = makeBoard(AFTER_E4_E5);
-    pieceOn(board, "e4").querySelector("img").alt = "X";
-    expect(read(board)).toStrictEqual({ ok: false, reason: `unknown piece "X" (id ${idOf("e4")})` });
+    test("an unknown piece letter is rejected", () => {
+      const board = makeBoard(AFTER_E4_E5);
+      pieceOn(board, "e4").querySelector("img").alt = "X";
+      expect(read(board)).toStrictEqual({ ok: false, reason: `unknown piece "X" (id ${idOf("e4")})` });
+    });
   });
 });

@@ -2,8 +2,7 @@ import { ChessNotesPosition } from "./position.js";
 
 /**
  * Watches the page for board changes and logs the position each time it
- * settles. For now this only writes to the browser console; the notes box
- * comes next.
+ * settles. It writes only to the browser console.
  *
  * The site is a single-page app, so the board can appear, disappear or be
  * replaced without the page reloading. We therefore watch the whole page

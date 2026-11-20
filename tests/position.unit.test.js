@@ -310,8 +310,6 @@ describe("orientationFromIds", () => {
 });
 
 describe("chooseOrientation", () => {
-  // Takes the orientation from the labels and from the ids, in that order.
-
   // Returns the orientation when the labels and ids agree, or when only one gives one.
 
   test('labels "white", ids "white" → "white"', () => {
