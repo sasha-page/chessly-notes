@@ -93,7 +93,7 @@ describe("readBoard", () => {
     expect(read(board)).toStrictEqual({ ok: false, reason: "piece P is drawn on e4 but its id says d5" });
   });
 
-  // Boards that can't be read yet.
+  // Boards that can't be read.
 
   test("a piece between squares is rejected", () => {
     const board = makeBoard(AFTER_E4_E5);
