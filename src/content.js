@@ -16,6 +16,7 @@ import { ChessNotesPosition } from "./position.js";
   const MAX_RETRIES = 8;
 
   let lastPlacement = null;
+  let lastFindReason = null; // why findBoard last failed, null once a board is found
   let timer = null;
   let retries = 0;
 
@@ -28,8 +29,14 @@ import { ChessNotesPosition } from "./position.js";
     const found = ChessNotesPosition.findBoard();
     if (!found.ok) {
       lastPlacement = null;
+      // The page changes often, so log only when the reason changes.
+      if (found.reason !== lastFindReason) {
+        lastFindReason = found.reason;
+        console.warn(LOG_PREFIX, "couldn't find the board:", found.reason);
+      }
       return;
     }
+    lastFindReason = null;
 
     const result = ChessNotesPosition.readBoard(found.board);
 
