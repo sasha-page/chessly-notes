@@ -150,14 +150,34 @@ describe("orientationFromLabels", () => {
     expect(internals.orientationFromLabels(board)).toBe("black");
   });
 
-  test('whitespace around the label is ignored ("\\n    8\\n  ", "7" → "white")', () => {
+  test('whitespace around the labels is ignored ("\\n    8\\n  " to "\\n    1\\n  " → "white")', () => {
     const board = document.createElement("div");
-    // Laid out like the real page, with the number on its own line.
+    // Laid out like the real page, with each number on its own line.
     board.innerHTML = `
     <div class="ChessBoard_rankNumber__YLkVg">
     8
   </div>
-    <div class="ChessBoard_rankNumber__YLkVg">7</div>`;
+    <div class="ChessBoard_rankNumber__YLkVg">
+    7
+  </div>
+    <div class="ChessBoard_rankNumber__YLkVg">
+    6
+  </div>
+    <div class="ChessBoard_rankNumber__YLkVg">
+    5
+  </div>
+    <div class="ChessBoard_rankNumber__YLkVg">
+    4
+  </div>
+    <div class="ChessBoard_rankNumber__YLkVg">
+    3
+  </div>
+    <div class="ChessBoard_rankNumber__YLkVg">
+    2
+  </div>
+    <div class="ChessBoard_rankNumber__YLkVg">
+    1
+  </div>`;
     expect(internals.orientationFromLabels(board)).toBe("white");
   });
 
