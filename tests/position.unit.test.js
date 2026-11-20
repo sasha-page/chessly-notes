@@ -228,6 +228,21 @@ describe("orientationFromLabels", () => {
     <div class="ChessBoard_rankNumber__YLkVg">2</div>`;
     expect(internals.orientationFromLabels(board)).toBe(null);
   });
+
+  test('more than eight labels ("1" to "8", then "8" again → null)', () => {
+    const board = document.createElement("div");
+    board.innerHTML = `
+    <div class="ChessBoard_rankNumber__YLkVg">1</div>
+    <div class="ChessBoard_rankNumber__YLkVg">2</div>
+    <div class="ChessBoard_rankNumber__YLkVg">3</div>
+    <div class="ChessBoard_rankNumber__YLkVg">4</div>
+    <div class="ChessBoard_rankNumber__YLkVg">5</div>
+    <div class="ChessBoard_rankNumber__YLkVg">6</div>
+    <div class="ChessBoard_rankNumber__YLkVg">7</div>
+    <div class="ChessBoard_rankNumber__YLkVg">8</div>
+    <div class="ChessBoard_rankNumber__YLkVg">8</div>`;
+    expect(internals.orientationFromLabels(board)).toBe(null);
+  });
 });
 
 describe("orientationFromIds", () => {
