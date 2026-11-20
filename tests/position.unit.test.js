@@ -303,7 +303,7 @@ describe("orientationFromIds", () => {
 
   test("no usable pieces → null", () => {
     const pieces = [
-      { idSquare: null, screen: { row: 5, col: 5 } },
+      { idSquare: { row: 5, col: 5 }, screen: null },
     ];
     expect(internals.orientationFromIds(pieces)).toBe(null);
   });
