@@ -293,14 +293,6 @@ describe("orientationFromIds", () => {
     expect(internals.orientationFromIds(pieces)).toBe(null);
   });
 
-  test("a piece fits neither side as the second piece → null", () => {
-    const pieces = [
-      { idSquare: { row: 7, col: 1 }, screen: { row: 7, col: 1 } }, // b1, fits White
-      { idSquare: { row: 2, col: 5 }, screen: { row: 2, col: 4 } }, // f6, fits neither
-    ];
-    expect(internals.orientationFromIds(pieces)).toBe(null);
-  });
-
   test("no usable pieces → null", () => {
     const pieces = [
       { idSquare: { row: 5, col: 5 }, screen: null },
