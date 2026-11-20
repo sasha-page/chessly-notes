@@ -51,10 +51,10 @@ export const ChessNotesPosition = (() => {
    * Returns null if there are no labels to go by.
    */
   function orientationFromLabels(board) {
-    const topLabel = board.querySelector(SELECTORS.rankLabel);
-    const text = topLabel?.textContent.trim();
-    if (text === "8") return "white";
-    if (text === "1") return "black";
+    const labels = [...board.querySelectorAll(SELECTORS.rankLabel)];
+    const ranks = labels.map((label) => label.textContent.trim()).join("");
+    if (ranks === "87654321") return "white";
+    if (ranks.startsWith("1")) return "black";
     return null;
   }
 
