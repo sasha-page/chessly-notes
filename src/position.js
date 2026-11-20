@@ -80,7 +80,7 @@ export const ChessNotesPosition = (() => {
 
   /** The board's orientation from the labels and the ids. */
   function chooseOrientation(fromLabels, fromIds) {
-    return { ok: true, orientation: fromLabels };
+    return { ok: true, orientation: fromLabels ?? fromIds };
   }
 
   /** Screen square from `translate(X%, Y%)`, or null if between squares. */
