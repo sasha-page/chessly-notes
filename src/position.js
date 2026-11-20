@@ -80,6 +80,9 @@ export const ChessNotesPosition = (() => {
 
   /** The board's orientation from the labels and the ids. */
   function chooseOrientation(fromLabels, fromIds) {
+    if (fromLabels && fromIds && fromLabels !== fromIds) {
+      return { ok: false, reason: "the labels say White is at the bottom but the ids say Black" };
+    }
     return { ok: true, orientation: fromLabels ?? fromIds };
   }
 
